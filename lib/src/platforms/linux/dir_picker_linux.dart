@@ -54,8 +54,8 @@ class DirPickerLinux extends DirPickerPlatform {
         'org.freedesktop.portal.FileChooser',
         'OpenFile',
         [
-          DBusString(''),                  // parent_window
-          DBusString('Select Directory'),  // title
+          DBusString(''), // parent_window
+          DBusString('Select Directory'), // title
           DBusDict.stringVariant({
             'handle_token': DBusString(token),
             'directory': DBusBoolean(true),
