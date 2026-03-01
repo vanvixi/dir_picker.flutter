@@ -13,7 +13,7 @@ class DirPickerAndroid extends DirPickerPlatform {
   }
 
   @override
-  Future<Uri?> pick({AndroidOptions? androidOptions}) {
+  Future<Uri?> pick({AndroidOptions? androidOptions, MacosOptions? macosOptions}) {
     final completer = Completer<Uri?>();
 
     final callback = native.PickerCallback.implement(

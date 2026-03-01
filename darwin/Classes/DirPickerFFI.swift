@@ -21,7 +21,12 @@ private var activePickerHelper: DocumentPickerHelper?
 private let pickerLock = NSLock()
 
 @_cdecl("dir_picker_pick")
-public func dirPickerPick(_ nativePort: Int64) {
+public func dirPickerPick(
+    _ nativePort: Int64,
+    _ promptPtr: UnsafePointer<CChar>?,
+    _ messagePtr: UnsafePointer<CChar>?
+) {
+    // prompt and message are macOS-only — ignored on iOS
     let reporter = DirPickerReporter(port: nativePort)
 
     DispatchQueue.main.async {
@@ -68,10 +73,17 @@ private func getRootViewController() -> UIViewController? {
 #elseif os(macOS)
 
 @_cdecl("dir_picker_pick")
-public func dirPickerPick(_ nativePort: Int64) {
+public func dirPickerPick(
+    _ nativePort: Int64,
+    _ promptPtr: UnsafePointer<CChar>?,
+    _ messagePtr: UnsafePointer<CChar>?
+) {
     let reporter = DirPickerReporter(port: nativePort)
+    // Copy C strings immediately — safe to free the Dart-side pointers after this call returns
+    let prompt = promptPtr.map { String(cString: $0) } ?? "Select"
+    let message = messagePtr.map { String(cString: $0) } ?? "Choose a directory"
 
-    PanelPickerHelper.pick { url in
+    PanelPickerHelper.pick(prompt: prompt, message: message) { url in
         if let url = url {
             reporter.sendSuccess(uri: url.absoluteString)
         } else {

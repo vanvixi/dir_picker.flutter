@@ -7,16 +7,23 @@ import AppKit
 class PanelPickerHelper {
     /// Pick a directory using the system open panel.
     ///
-    /// - Parameter completion: Called with the selected directory URL, or nil if cancelled
-    static func pick(completion: @escaping (URL?) -> Void) {
+    /// - Parameters:
+    ///   - prompt:     Label for the confirmation button. Defaults to `"Select"`.
+    ///   - message:    Descriptive text shown in the panel. Defaults to `"Choose a directory"`.
+    ///   - completion: Called with the selected directory URL, or nil if cancelled.
+    static func pick(
+        prompt: String = "Select",
+        message: String = "Choose a directory",
+        completion: @escaping (URL?) -> Void
+    ) {
         DispatchQueue.main.async {
             let panel = NSOpenPanel()
             panel.canChooseDirectories = true
             panel.canChooseFiles = false
             panel.canCreateDirectories = true
             panel.allowsMultipleSelection = false
-            panel.prompt = "Select"
-            panel.message = "Choose a directory"
+            panel.prompt = prompt
+            panel.message = message
 
             if panel.runModal() == .OK {
                 completion(panel.url)

@@ -1,6 +1,8 @@
 import '../options/android_options.dart';
+import '../options/macos_options.dart';
 
 export '../options/android_options.dart';
+export '../options/macos_options.dart';
 
 abstract class DirPickerPlatform {
   static DirPickerPlatform? _instance;
@@ -16,5 +18,5 @@ abstract class DirPickerPlatform {
 
   static set instance(DirPickerPlatform platform) => _instance = platform;
 
-  Future<Uri?> pick({AndroidOptions? androidOptions});
+  Future<Uri?> pick({AndroidOptions? androidOptions, MacosOptions? macosOptions});
 }

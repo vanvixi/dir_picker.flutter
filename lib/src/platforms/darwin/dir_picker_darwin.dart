@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:isolate';
 
+import 'package:ffi/ffi.dart';
+
 import '../../platform_interface/dir_picker_platform.dart';
 import 'native.g.dart' as native;
 
@@ -28,7 +30,7 @@ class DirPickerDarwin extends DirPickerPlatform {
   late final native.DirPickerBindings _bindings;
 
   @override
-  Future<Uri?> pick({AndroidOptions? androidOptions}) async {
+  Future<Uri?> pick({AndroidOptions? androidOptions, MacosOptions? macosOptions}) async {
     final completer = Completer<Uri?>();
     final port = ReceivePort();
 
@@ -58,7 +60,18 @@ class DirPickerDarwin extends DirPickerPlatform {
       }
     });
 
-    _bindings.dir_picker_pick(port.sendPort.nativePort);
+    // Allocate C strings for macOS options; Swift copies them synchronously
+    // before dispatching to the main queue, so freeing after the call is safe.
+    final opts = macosOptions ?? const MacosOptions();
+    final promptPtr = opts.prompt.toNativeUtf8().cast<Char>();
+    final messagePtr = opts.message.toNativeUtf8().cast<Char>();
+
+    try {
+      _bindings.dir_picker_pick(port.sendPort.nativePort, promptPtr, messagePtr);
+    } finally {
+      calloc.free(promptPtr);
+      calloc.free(messagePtr);
+    }
 
     return completer.future;
   }

@@ -20,6 +20,10 @@ class _MyAppState extends State<MyApp> {
     try {
       final uri = await DirPicker.pick(
         androidOptions: const AndroidOptions(shouldPersist: true),
+        macosOptions: const MacosOptions(
+          prompt: 'Select a directory 🤭',
+          message: 'Please choose a directory to continue',
+        ),
       );
       setState(() {
         _result = uri != null ? uri.toString() : 'Cancelled';
