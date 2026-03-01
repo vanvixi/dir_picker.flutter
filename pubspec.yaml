@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   ffi: ^2.2.0
   jni: ^0.15.2
+  dbus: ^0.7.12
 
 dev_dependencies:
   ffigen: ^20.1.1
@@ -42,4 +43,8 @@ flutter:
         dartPluginClass: DirPickerDarwin
       windows:
         dartPluginClass: DirPickerWindows
-
+      linux:
+        dartPluginClass: DirPickerLinux
+      web:
+        pluginClass: DirPickerWeb
+        fileName: dir_picker.dart
