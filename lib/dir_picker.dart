@@ -1,6 +1,7 @@
 import 'src/platform_interface/dir_picker_platform.dart';
 
 export 'src/options/android_options.dart';
+export 'src/options/linux_options.dart';
 export 'src/options/macos_options.dart';
 
 export 'src/platform_interface/dir_picker_platform.dart';
@@ -19,16 +20,19 @@ class DirPicker {
   /// Picks a directory and returns its [Uri], or `null` if the user cancelled.
   ///
   /// [androidOptions]: Android-specific options (e.g. persistent URI permission).
+  /// [linuxOptions]: Linux-specific options (e.g. dialog title).
   /// [macosOptions]: macOS-specific options (e.g. panel prompt and message text).
   ///
   /// On web, the returned [Uri] path is the selected directory name only —
   /// browsers do not expose full filesystem paths.
   static Future<Uri?> pick({
     AndroidOptions? androidOptions,
+    LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
   }) =>
       DirPickerPlatform.instance.pick(
         androidOptions: androidOptions,
+        linuxOptions: linuxOptions,
         macosOptions: macosOptions,
       );
 }

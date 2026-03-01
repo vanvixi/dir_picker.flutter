@@ -26,8 +26,17 @@ class DirPickerLinux extends DirPickerPlatform {
   }
 
   @override
-  Future<Uri?> pick({AndroidOptions? androidOptions, MacosOptions? macosOptions}) async {
-    for (final picker in [_pickWithPortal, _pickWithZenity, _pickWithKdialog]) {
+  Future<Uri?> pick({
+    AndroidOptions? androidOptions,
+    LinuxOptions? linuxOptions,
+    MacosOptions? macosOptions,
+  }) async {
+    final opts = linuxOptions ?? const LinuxOptions();
+    for (final picker in [
+      () => _pickWithPortal(opts),
+      () => _pickWithZenity(opts),
+      () => _pickWithKdialog(opts),
+    ]) {
       try {
         return await picker();
       } on _PickerUnavailableException {
@@ -37,7 +46,7 @@ class DirPickerLinux extends DirPickerPlatform {
     return null;
   }
 
-  Future<Uri?> _pickWithPortal() async {
+  Future<Uri?> _pickWithPortal(LinuxOptions opts) async {
     DBusClient? client;
     try {
       client = DBusClient.session();
@@ -55,11 +64,12 @@ class DirPickerLinux extends DirPickerPlatform {
         'OpenFile',
         [
           DBusString(''), // parent_window
-          DBusString('Select Directory'), // title
+          DBusString(opts.title), // title
           DBusDict.stringVariant({
             'handle_token': DBusString(token),
             'directory': DBusBoolean(true),
             'modal': DBusBoolean(true),
+            'accept_label': DBusString(opts.acceptLabel),
           }),
         ],
         replySignature: DBusSignature('o'),
@@ -99,12 +109,13 @@ class DirPickerLinux extends DirPickerPlatform {
     }
   }
 
-  Future<Uri?> _pickWithZenity() async {
+  Future<Uri?> _pickWithZenity(LinuxOptions opts) async {
     try {
       final result = await Process.run('zenity', [
         '--file-selection',
         '--directory',
-        '--title=Select Directory',
+        '--title=${opts.title}',
+        '--ok-label=${opts.acceptLabel}',
       ]);
       if (result.exitCode != 0) return null;
       final path = (result.stdout as String).trim();
@@ -114,9 +125,11 @@ class DirPickerLinux extends DirPickerPlatform {
     }
   }
 
-  Future<Uri?> _pickWithKdialog() async {
+  Future<Uri?> _pickWithKdialog(LinuxOptions opts) async {
     try {
       final result = await Process.run('kdialog', [
+        '--title',
+        opts.title,
         '--getexistingdirectory',
         Platform.environment['HOME'] ?? '/',
       ]);

@@ -30,7 +30,10 @@ class DirPickerDarwin extends DirPickerPlatform {
   late final native.DirPickerBindings _bindings;
 
   @override
-  Future<Uri?> pick({AndroidOptions? androidOptions, MacosOptions? macosOptions}) async {
+  Future<Uri?> pick(
+      {AndroidOptions? androidOptions,
+      LinuxOptions? linuxOptions,
+      MacosOptions? macosOptions}) async {
     final completer = Completer<Uri?>();
     final port = ReceivePort();
 
@@ -67,7 +70,8 @@ class DirPickerDarwin extends DirPickerPlatform {
     final messagePtr = opts.message.toNativeUtf8().cast<Char>();
 
     try {
-      _bindings.dir_picker_pick(port.sendPort.nativePort, promptPtr, messagePtr);
+      _bindings.dir_picker_pick(
+          port.sendPort.nativePort, promptPtr, messagePtr);
     } finally {
       calloc.free(promptPtr);
       calloc.free(messagePtr);
