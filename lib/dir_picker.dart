@@ -3,6 +3,7 @@ import 'src/platform_interface/dir_picker_platform.dart';
 export 'src/options/android_options.dart';
 export 'src/options/linux_options.dart';
 export 'src/options/macos_options.dart';
+export 'src/options/windows_options.dart';
 
 export 'src/platform_interface/dir_picker_platform.dart';
 
@@ -22,6 +23,7 @@ class DirPicker {
   /// [androidOptions]: Android-specific options (e.g. persistent URI permission).
   /// [linuxOptions]: Linux-specific options (e.g. dialog title).
   /// [macosOptions]: macOS-specific options (e.g. panel prompt and message text).
+  /// [windowsOptions]: Windows-specific options (e.g. dialog title and OK button label).
   ///
   /// On web, the returned [Uri] path is the selected directory name only —
   /// browsers do not expose full filesystem paths.
@@ -29,10 +31,12 @@ class DirPicker {
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
+    WindowsOptions? windowsOptions,
   }) =>
       DirPickerPlatform.instance.pick(
         androidOptions: androidOptions,
         linuxOptions: linuxOptions,
         macosOptions: macosOptions,
+        windowsOptions: windowsOptions,
       );
 }

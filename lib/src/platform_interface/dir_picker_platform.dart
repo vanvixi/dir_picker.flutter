@@ -1,10 +1,12 @@
 import '../options/android_options.dart';
 import '../options/linux_options.dart';
 import '../options/macos_options.dart';
+import '../options/windows_options.dart';
 
 export '../options/android_options.dart';
 export '../options/linux_options.dart';
 export '../options/macos_options.dart';
+export '../options/windows_options.dart';
 
 abstract class DirPickerPlatform {
   static DirPickerPlatform? _instance;
@@ -24,5 +26,6 @@ abstract class DirPickerPlatform {
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
+    WindowsOptions? windowsOptions,
   });
 }

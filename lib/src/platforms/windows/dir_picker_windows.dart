@@ -135,6 +135,15 @@ typedef _GetDisplayNameNative = HRESULT Function(
 typedef _GetDisplayNameDart = int Function(
     Pointer<Void>, int, Pointer<Pointer<Utf16>>);
 
+// IFileDialog::SetTitle (vtable index 17)
+typedef _SetTitleNative = HRESULT Function(Pointer<Void>, Pointer<Utf16>);
+typedef _SetTitleDart = int Function(Pointer<Void>, Pointer<Utf16>);
+
+// IFileDialog::SetOkButtonLabel (vtable index 18)
+typedef _SetOkButtonLabelNative = HRESULT Function(
+    Pointer<Void>, Pointer<Utf16>);
+typedef _SetOkButtonLabelDart = int Function(Pointer<Void>, Pointer<Utf16>);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DirPickerWindows — platform implementation
 // ─────────────────────────────────────────────────────────────────────────────
@@ -150,27 +159,32 @@ class DirPickerWindows extends DirPickerPlatform {
   /// Runs on a separate isolate because the COM dialog blocks the calling
   /// thread until the user closes it.
   @override
-  Future<Uri?> pick(
-      {AndroidOptions? androidOptions,
-      LinuxOptions? linuxOptions,
-      MacosOptions? macosOptions}) async {
-    final path = await Isolate.run(_pickSync);
+  Future<Uri?> pick({
+    AndroidOptions? androidOptions,
+    LinuxOptions? linuxOptions,
+    MacosOptions? macosOptions,
+    WindowsOptions? windowsOptions,
+  }) async {
+    final opts = windowsOptions ?? const WindowsOptions();
+    final path = await Isolate.run(
+      () => _pickSync(opts.title, opts.acceptLabel),
+    );
     if (path == null) return null;
     return Uri.directory(path, windows: true);
   }
 
-  static String? _pickSync() {
+  static String? _pickSync(String title, String acceptLabel) {
     final hr = _coInitializeEx(nullptr, _coinitApartmentThreaded);
     if (hr < 0 && hr != 1) return null; // 1 = S_FALSE (already initialized)
 
     try {
-      return _showDialog();
+      return _showDialog(title, acceptLabel);
     } finally {
       _coUninitialize();
     }
   }
 
-  static String? _showDialog() {
+  static String? _showDialog(String title, String acceptLabel) {
     // CLSID_FileOpenDialog: {DC1C5A9C-E88A-4DDE-A5A1-60F82A20AEF7}
     final clsid = calloc<_GUID>()
       ..ref.parse('{DC1C5A9C-E88A-4DDE-A5A1-60F82A20AEF7}');
@@ -197,6 +211,27 @@ class DirPickerWindows extends DirPickerPlatform {
       if (hr < 0) {
         _release(dialog);
         return null;
+      }
+
+      // Set dialog title
+      final titlePtr = title.toNativeUtf16();
+      try {
+        final setTitle = _vtableEntry<_SetTitleNative>(dialog, 17)
+            .asFunction<_SetTitleDart>();
+        setTitle(dialog, titlePtr);
+      } finally {
+        calloc.free(titlePtr);
+      }
+
+      // Set OK button label
+      final labelPtr = acceptLabel.toNativeUtf16();
+      try {
+        final setOkButtonLabel =
+            _vtableEntry<_SetOkButtonLabelNative>(dialog, 18)
+                .asFunction<_SetOkButtonLabelDart>();
+        setOkButtonLabel(dialog, labelPtr);
+      } finally {
+        calloc.free(labelPtr);
       }
 
       // Show the dialog (blocks until user closes)

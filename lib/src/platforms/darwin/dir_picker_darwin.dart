@@ -30,10 +30,12 @@ class DirPickerDarwin extends DirPickerPlatform {
   late final native.DirPickerBindings _bindings;
 
   @override
-  Future<Uri?> pick(
-      {AndroidOptions? androidOptions,
-      LinuxOptions? linuxOptions,
-      MacosOptions? macosOptions}) async {
+  Future<Uri?> pick({
+    AndroidOptions? androidOptions,
+    LinuxOptions? linuxOptions,
+    MacosOptions? macosOptions,
+    WindowsOptions? windowsOptions,
+  }) async {
     final completer = Completer<Uri?>();
     final port = ReceivePort();
 

@@ -30,6 +30,7 @@ class DirPickerLinux extends DirPickerPlatform {
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
+    WindowsOptions? windowsOptions,
   }) async {
     final opts = linuxOptions ?? const LinuxOptions();
     for (final picker in [

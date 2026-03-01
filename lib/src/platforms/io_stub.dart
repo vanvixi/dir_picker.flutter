@@ -7,7 +7,8 @@ class DirPickerWindows extends DirPickerPlatform {
   Future<Uri?> pick(
           {AndroidOptions? androidOptions,
           LinuxOptions? linuxOptions,
-          MacosOptions? macosOptions}) =>
+          MacosOptions? macosOptions,
+          WindowsOptions? windowsOptions}) =>
       throw UnsupportedError('DirPicker is not supported on this platform.');
 }
 
@@ -17,7 +18,8 @@ class DirPickerLinux extends DirPickerPlatform {
   Future<Uri?> pick(
           {AndroidOptions? androidOptions,
           LinuxOptions? linuxOptions,
-          MacosOptions? macosOptions}) =>
+          MacosOptions? macosOptions,
+          WindowsOptions? windowsOptions}) =>
       throw UnsupportedError('DirPicker is not supported on this platform.');
 }
 
@@ -27,7 +29,8 @@ class DirPickerAndroid extends DirPickerPlatform {
   Future<Uri?> pick(
           {AndroidOptions? androidOptions,
           LinuxOptions? linuxOptions,
-          MacosOptions? macosOptions}) =>
+          MacosOptions? macosOptions,
+          WindowsOptions? windowsOptions}) =>
       throw UnsupportedError('DirPicker is not supported on this platform.');
 }
 
@@ -37,6 +40,7 @@ class DirPickerDarwin extends DirPickerPlatform {
   Future<Uri?> pick(
           {AndroidOptions? androidOptions,
           LinuxOptions? linuxOptions,
-          MacosOptions? macosOptions}) =>
+          MacosOptions? macosOptions,
+          WindowsOptions? windowsOptions}) =>
       throw UnsupportedError('DirPicker is not supported on this platform.');
 }
