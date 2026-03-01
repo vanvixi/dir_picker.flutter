@@ -1,0 +1,19 @@
+# JNI bindings configuration for Android
+# Run with:
+#   cd example && flutter build apk --debug && cd ..
+#   dart run jnigen --config jnigen.yaml
+output:
+  dart:
+    path: lib/src/platforms/android/native.g.dart
+    structure: single_file
+
+source_path:
+  - android/src/main/kotlin/com/vanvixi/dir_picker
+
+classes:
+  - 'com.vanvixi.dir_picker.DirPicker'
+  - 'com.vanvixi.dir_picker.PickerCallback'
+
+class_path:
+  - example/build/dir_picker/tmp/kotlin-classes/debug
+

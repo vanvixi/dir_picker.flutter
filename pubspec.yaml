@@ -1,0 +1,45 @@
+name: dir_picker
+description: "A Flutter plugin for picking directories, supporting Android, iOS, macOS, Windows, Linux and Web via FFI and JNI."
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ^3.6.0
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  ffi: ^2.2.0
+  jni: ^0.15.2
+
+dev_dependencies:
+  ffigen: ^20.1.1
+  jnigen: ^0.15.0
+
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.vanvixi.dir_picker
+        pluginClass: DirPickerPlugin
+        dartPluginClass: DirPickerAndroid
+      ios:
+        ffiPlugin: true
+        sharedDarwinSource: true
+        pluginClass: DirPickerPlugin
+        dartPluginClass: DirPickerDarwin
+      macos:
+        ffiPlugin: true
+        sharedDarwinSource: true
+        pluginClass: DirPickerPlugin
+        dartPluginClass: DirPickerDarwin
+      windows:
+        dartPluginClass: DirPickerWindows
+
