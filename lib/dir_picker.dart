@@ -1,5 +1,7 @@
 import 'src/platform_interface/dir_picker_platform.dart';
 
+export 'src/options/android_options.dart';
+
 export 'src/platform_interface/dir_picker_platform.dart';
 
 // IO platforms (Windows, Linux, Android, Darwin) — or their stubs on web.
@@ -15,11 +17,10 @@ class DirPicker {
 
   /// Picks a directory and returns its [Uri], or `null` if the user cancelled.
   ///
-  /// [shouldPersist] (Android only): whether to take persistable URI permission
-  /// so the app can access the directory across reboots.
+  /// [androidOptions]: Android-specific options (e.g. persistent URI permission).
   ///
   /// On web, the returned [Uri] path is the selected directory name only —
   /// browsers do not expose full filesystem paths.
-  static Future<Uri?> pick({bool shouldPersist = true}) =>
-      DirPickerPlatform.instance.pick(shouldPersist: shouldPersist);
+  static Future<Uri?> pick({AndroidOptions? androidOptions}) =>
+      DirPickerPlatform.instance.pick(androidOptions: androidOptions);
 }

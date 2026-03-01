@@ -26,7 +26,7 @@ class DirPickerWeb extends DirPickerPlatform {
   }
 
   @override
-  Future<Uri?> pick({bool shouldPersist = true}) async {
+  Future<Uri?> pick({AndroidOptions? androidOptions}) async {
     try {
       final handle = await _window.showDirectoryPicker().toDart;
       return Uri(path: handle.name);

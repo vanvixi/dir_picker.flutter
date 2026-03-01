@@ -150,7 +150,7 @@ class DirPickerWindows extends DirPickerPlatform {
   /// Runs on a separate isolate because the COM dialog blocks the calling
   /// thread until the user closes it.
   @override
-  Future<Uri?> pick({bool shouldPersist = true}) async {
+  Future<Uri?> pick({AndroidOptions? androidOptions}) async {
     final path = await Isolate.run(_pickSync);
     if (path == null) return null;
     return Uri.directory(path, windows: true);

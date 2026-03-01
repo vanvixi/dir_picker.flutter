@@ -26,7 +26,7 @@ class DirPickerLinux extends DirPickerPlatform {
   }
 
   @override
-  Future<Uri?> pick({bool shouldPersist = true}) async {
+  Future<Uri?> pick({AndroidOptions? androidOptions}) async {
     for (final picker in [_pickWithPortal, _pickWithZenity, _pickWithKdialog]) {
       try {
         return await picker();

@@ -5,6 +5,6 @@ class DirPickerWeb extends DirPickerPlatform {
   static void registerWith(dynamic registrar) =>
       DirPickerPlatform.instance = DirPickerWeb();
   @override
-  Future<Uri?> pick({bool shouldPersist = true}) =>
+  Future<Uri?> pick({AndroidOptions? androidOptions}) =>
       throw UnsupportedError('DirPicker is not supported on this platform.');
 }

@@ -18,7 +18,9 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _pickDirectory() async {
     try {
-      final uri = await DirPicker.pick(shouldPersist: true);
+      final uri = await DirPicker.pick(
+        androidOptions: const AndroidOptions(shouldPersist: true),
+      );
       setState(() {
         _result = uri != null ? uri.toString() : 'Cancelled';
       });

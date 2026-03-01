@@ -13,7 +13,7 @@ class DirPickerAndroid extends DirPickerPlatform {
   }
 
   @override
-  Future<Uri?> pick({bool shouldPersist = true}) {
+  Future<Uri?> pick({AndroidOptions? androidOptions}) {
     final completer = Completer<Uri?>();
 
     final callback = native.PickerCallback.implement(
@@ -35,7 +35,7 @@ class DirPickerAndroid extends DirPickerPlatform {
     );
 
     // Non-blocking: Kotlin launches coroutine internally
-    native.DirPicker.pick(shouldPersist, callback);
+    native.DirPicker.pick(androidOptions?.shouldPersist ?? true, callback);
 
     return completer.future.whenComplete(() => callback.release());
   }

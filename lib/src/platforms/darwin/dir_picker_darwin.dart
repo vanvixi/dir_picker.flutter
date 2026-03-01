@@ -28,8 +28,7 @@ class DirPickerDarwin extends DirPickerPlatform {
   late final native.DirPickerBindings _bindings;
 
   @override
-  Future<Uri?> pick({bool shouldPersist = true}) async {
-    // Note: shouldPersist is ignored on Darwin — no persistent URI permissions.
+  Future<Uri?> pick({AndroidOptions? androidOptions}) async {
     final completer = Completer<Uri?>();
     final port = ReceivePort();
 
