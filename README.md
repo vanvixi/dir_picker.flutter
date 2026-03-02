@@ -234,9 +234,15 @@ Returns the selected directory as a `Uri`, or `null` if the user cancelled.
 
 **Minimum versions:**
 
-| Flutter | Dart SDK | Kotlin | Android | iOS   | macOS  | Windows | Web             |
-|---------|----------|--------|---------|-------|--------|---------|-----------------|
-| ≥3.3.0  | ≥3.6.0   | 2.1.0  | API 21+ | 13.0+ | 10.15+ | 10+     | Chrome/Edge 86+ |
+- Flutter ≥ 3.3.0
+- Dart SDK ≥ 3.6.0
+- Kotlin 2.1.0
+- Swift 5.9
+- Android API 21+
+- iOS 13.0+
+- macOS 10.15+
+- Windows 10+
+- Web: Chrome/Edge 86+
 
 ## Contributing
 
