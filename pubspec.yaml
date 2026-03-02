@@ -42,12 +42,10 @@ flutter:
       ios:
         ffiPlugin: true
         sharedDarwinSource: true
-        pluginClass: DirPickerPlugin
         dartPluginClass: DirPickerDarwin
       macos:
         ffiPlugin: true
         sharedDarwinSource: true
-        pluginClass: DirPickerPlugin
         dartPluginClass: DirPickerDarwin
       windows:
         dartPluginClass: DirPickerWindows

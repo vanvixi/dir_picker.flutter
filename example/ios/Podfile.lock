@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  dir_picker: a4085728ef4338210fee269fbfcb943f5937de6f
+  dir_picker: 153a68e3a17dbf4d7a5012d7c3642704972cec9a
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e

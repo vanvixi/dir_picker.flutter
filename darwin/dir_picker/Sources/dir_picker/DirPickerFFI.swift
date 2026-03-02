@@ -4,7 +4,7 @@ import UIKit
 #elseif os(macOS)
 import AppKit
 #endif
-@_implementationOnly import DartApiDl
+import DartApiDl
 
 // MARK: - Init
 

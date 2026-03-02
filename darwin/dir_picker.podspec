@@ -14,11 +14,11 @@ A Flutter plugin for picking directories on iOS and macOS using FFI and DartApiD
   s.author           = { 'Vanvixi' => 'vanvixi.dev@gmail.com' }
 
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*.{h,c,swift}'
-  # No public_header_files — C headers are used internally by Swift only
-  # (imported via SWIFT_INCLUDE_PATHS + module.modulemap as 'DartApiDl').
-  # Exposing them causes CocoaPods to generate an umbrella header that
-  # Clang cannot modularize, breaking '@import dir_picker'.
+  s.source_files = 'dir_picker/Sources/**/*.{h,c,swift}'
+  s.public_header_files = [
+    'dir_picker/Sources/DartApiDl/include/dart_api_dl.h',
+    'dir_picker/Sources/dir_picker/include/dir_picker_ffi.h'
+  ]
 
   s.ios.dependency 'Flutter'
   s.osx.dependency 'FlutterMacOS'
@@ -26,13 +26,13 @@ A Flutter plugin for picking directories on iOS and macOS using FFI and DartApiD
   s.ios.deployment_target = '13.0'
   s.osx.deployment_target = '10.15'
 
-  s.preserve_paths = 'Classes/include/module.modulemap'
+  s.preserve_paths = 'dir_picker/Sources/DartApiDl/include/module.modulemap'
 
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/Classes/include',
-    'OTHER_CFLAGS' => '-I$(PODS_TARGET_SRCROOT)/Classes/include'
+    'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/dir_picker/Sources/DartApiDl/include',
+    'OTHER_CFLAGS' => '-I$(PODS_TARGET_SRCROOT)/dir_picker/Sources/DartApiDl/include'
   }
-  s.swift_version = '5.0'
+  s.swift_version = '5.9'
 end

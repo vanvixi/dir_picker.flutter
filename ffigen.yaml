@@ -6,9 +6,9 @@ description: |
 output: 'lib/src/platforms/darwin/native.g.dart'
 headers:
   entry-points:
-    - 'darwin/Classes/include/dir_picker_ffi.h'
+    - 'darwin/dir_picker/Sources/dir_picker/include/dir_picker_ffi.h'
   include-directives:
-    - 'darwin/Classes/include/dir_picker_ffi.h'
+    - 'darwin/dir_picker/Sources/dir_picker/include/dir_picker_ffi.h'
 functions:
   include:
     - dir_picker_init_dart_api_dl

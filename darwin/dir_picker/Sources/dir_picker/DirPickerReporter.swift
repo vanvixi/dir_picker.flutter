@@ -1,5 +1,5 @@
 import Foundation
-@_implementationOnly import DartApiDl
+import DartApiDl
 
 /// Reports directory picker results to Dart via NativePort.
 ///
