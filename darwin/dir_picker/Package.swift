@@ -22,7 +22,9 @@ let package = Package(
             name: "dir_picker",
             dependencies: ["DartApiDl"],
             path: "Sources/dir_picker",
-            publicHeadersPath: "include"
+            cSettings: [
+                .headerSearchPath("include"),
+            ]
         ),
     ]
 )
