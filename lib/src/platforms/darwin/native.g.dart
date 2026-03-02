@@ -53,17 +53,17 @@ class DirPickerBindings {
   /// - Cancelled:  [1]
   /// - Error:      [2, errorCode, errorMessage]
   ///
-  /// @param native_port Dart NativePort for result reporting
-  /// @param prompt      Label for the confirmation button (macOS only, nullable)
-  /// @param message     Descriptive text in the panel (macOS only, nullable)
+  /// @param native_port   Dart NativePort for result reporting
+  /// @param accept_label  Label for the confirmation button (macOS only, nullable)
+  /// @param message       Descriptive text in the panel (macOS only, nullable)
   void dir_picker_pick(
     int native_port,
-    ffi.Pointer<ffi.Char> prompt,
+    ffi.Pointer<ffi.Char> accept_label,
     ffi.Pointer<ffi.Char> message,
   ) {
     return _dir_picker_pick(
       native_port,
-      prompt,
+      accept_label,
       message,
     );
   }

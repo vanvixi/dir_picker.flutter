@@ -68,14 +68,14 @@ class DirPickerDarwin extends DirPickerPlatform {
     // Allocate C strings for macOS options; Swift copies them synchronously
     // before dispatching to the main queue, so freeing after the call is safe.
     final opts = macosOptions ?? const MacosOptions();
-    final promptPtr = opts.prompt.toNativeUtf8().cast<Char>();
+    final acceptLabelPtr = opts.acceptLabel.toNativeUtf8().cast<Char>();
     final messagePtr = opts.message.toNativeUtf8().cast<Char>();
 
     try {
       _bindings.dir_picker_pick(
-          port.sendPort.nativePort, promptPtr, messagePtr);
+          port.sendPort.nativePort, acceptLabelPtr, messagePtr);
     } finally {
-      calloc.free(promptPtr);
+      calloc.free(acceptLabelPtr);
       calloc.free(messagePtr);
     }
 

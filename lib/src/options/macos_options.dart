@@ -1,13 +1,17 @@
 /// Options for directory picking on macOS.
 class MacosOptions {
   const MacosOptions({
-    this.prompt = 'Select',
+    this.acceptLabel = 'Select',
     this.message = 'Choose a directory',
   });
 
-  /// Label for the confirmation button in the directory picker panel.
-  final String prompt;
+  /// Label for the confirmation button.
+  ///
+  /// Applied via `NSOpenPanel.prompt`.
+  final String acceptLabel;
 
-  /// Descriptive message shown in the directory picker panel.
+  /// Descriptive message shown inside the panel above the browser.
+  ///
+  /// Applied via `NSOpenPanel.message`. macOS-specific — no equivalent on other platforms.
   final String message;
 }

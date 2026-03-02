@@ -8,11 +8,11 @@ class PanelPickerHelper {
     /// Pick a directory using the system open panel.
     ///
     /// - Parameters:
-    ///   - prompt:     Label for the confirmation button. Defaults to `"Select"`.
-    ///   - message:    Descriptive text shown in the panel. Defaults to `"Choose a directory"`.
-    ///   - completion: Called with the selected directory URL, or nil if cancelled.
+    ///   - acceptLabel: Label for the confirmation button. Defaults to `"Select"`.
+    ///   - message:     Descriptive text shown in the panel. Defaults to `"Choose a directory"`.
+    ///   - completion:  Called with the selected directory URL, or nil if cancelled.
     static func pick(
-        prompt: String = "Select",
+        acceptLabel: String = "Select",
         message: String = "Choose a directory",
         completion: @escaping (URL?) -> Void
     ) {
@@ -22,7 +22,7 @@ class PanelPickerHelper {
             panel.canChooseFiles = false
             panel.canCreateDirectories = true
             panel.allowsMultipleSelection = false
-            panel.prompt = prompt
+            panel.prompt = acceptLabel
             panel.message = message
 
             if panel.runModal() == .OK {

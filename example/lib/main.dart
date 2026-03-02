@@ -21,10 +21,14 @@ class _MyAppState extends State<MyApp> {
       final uri = await DirPicker.pick(
         androidOptions: const AndroidOptions(shouldPersist: true),
         macosOptions: const MacosOptions(
-          prompt: 'Select a directory',
+          acceptLabel: 'Select Directory',
           message: 'Please choose a directory to continue',
         ),
         linuxOptions: const LinuxOptions(
+          title: 'Select a directory',
+          acceptLabel: 'Choose',
+        ),
+        windowsOptions: const WindowsOptions(
           title: 'Select a directory',
           acceptLabel: 'Choose',
         ),

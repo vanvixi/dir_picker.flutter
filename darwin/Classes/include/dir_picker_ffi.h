@@ -17,9 +17,9 @@ intptr_t dir_picker_init_dart_api_dl(void* data);
 /// - Cancelled:  [1]
 /// - Error:      [2, errorCode, errorMessage]
 ///
-/// @param native_port Dart NativePort for result reporting
-/// @param prompt      Label for the confirmation button (macOS only, nullable)
-/// @param message     Descriptive text in the panel (macOS only, nullable)
-void dir_picker_pick(int64_t native_port, const char* prompt, const char* message);
+/// @param native_port   Dart NativePort for result reporting
+/// @param accept_label  Label for the confirmation button (macOS only, nullable)
+/// @param message       Descriptive text in the panel (macOS only, nullable)
+void dir_picker_pick(int64_t native_port, const char* accept_label, const char* message);
 
 #endif /* dir_picker_ffi_h */
