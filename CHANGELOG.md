@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Add README usage examples for handling `WebSelectedLocation` on web and `NativeLocation` on native
+
 ## 0.3.0
 
 * **Breaking:** `DirPicker.pick()` now returns `SelectedLocation?` instead of `Uri?`
