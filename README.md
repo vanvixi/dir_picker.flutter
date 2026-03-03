@@ -5,7 +5,7 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-A Flutter plugin for picking a directory across all platforms using native system dialogs. Returns a `Uri?` — null if the user cancelled.
+A Flutter plugin for picking a directory across all platforms using native system dialogs. Returns a `SelectedLocation?` — null if the user cancelled.
 
 ## Features
 
@@ -95,7 +95,7 @@ No configuration needed. The plugin uses the [File System Access API](https://de
 
 **Browser support:** Chrome 86+ and Edge 86+. Not supported in Firefox or Safari.
 
-> **Note:** On web, the returned `Uri` path contains only the directory name — browsers do not expose full filesystem paths for security reasons.
+> **Note:** On web, `pick()` returns a `WebSelectedLocation` wrapping a `FileSystemDirectoryHandle`. Use `.handle` to access directory contents via the File System Access API. `SelectedLocation.uri` is always `null` on web — browsers do not expose full filesystem paths. Requires `package:web` in your app's dependencies to work with the handle directly.
 
 </details>
 
@@ -104,12 +104,18 @@ No configuration needed. The plugin uses the [File System Access API](https://de
 ```dart
 import 'package:dir_picker/dir_picker.dart';
 
-final Uri? uri = await DirPicker.pick();
+final SelectedLocation? location = await DirPicker.pick();
 
-if (uri != null) {
-  print('Selected: $uri');
-} else {
+if (location == null) {
   print('Cancelled');
+} else if (location is WebSelectedLocation) {
+  // Web: use handle to access directory contents via File System Access API
+  // Requires package:web in your app's dependencies
+  final handle = location.handle; // FileSystemDirectoryHandle
+  print('Selected directory: ${location.name}');
+} else {
+  // Native (Android, iOS, macOS, Windows, Linux)
+  print('Selected: ${location.uri}');
 }
 ```
 
@@ -118,7 +124,7 @@ if (uri != null) {
 Each platform exposes its own options class for customizing the dialog. Pass them to `DirPicker.pick()`:
 
 ```dart
-final uri = await DirPicker.pick(
+final location = await DirPicker.pick(
   androidOptions: const AndroidOptions(shouldPersist: true),
   macosOptions: const MacosOptions(acceptLabel: 'Choose', message: 'Select a project folder'),
   linuxOptions: const LinuxOptions(title: 'Select Folder', acceptLabel: 'Choose'),
@@ -157,10 +163,11 @@ final uri = await DirPicker.pick(
 
 ### Return value
 
-| Result   | Meaning                                                                                      |
-|----------|----------------------------------------------------------------------------------------------|
-| `Uri`    | The selected directory URI.                                                                  |
-| `null`   | The user cancelled.                                                                          |
+| Result                  | Meaning                                                                                           |
+|-------------------------|---------------------------------------------------------------------------------------------------|
+| `NativeLocation`        | Native platforms — use `.uri` to get the selected directory URI.                                  |
+| `WebSelectedLocation`   | Web — use `.handle` (`FileSystemDirectoryHandle`) to access directory contents. `.uri` is `null`. |
+| `null`                  | The user cancelled.                                                                               |
 
 ### Native Mechanisms
 
@@ -175,19 +182,32 @@ final uri = await DirPicker.pick(
 
 ## Common Use Cases
 
-### Simple directory pick
+### Simple directory pick (native)
 
 ```dart
-final uri = await DirPicker.pick();
-if (uri != null) {
-  print('Selected: $uri');
+final location = await DirPicker.pick();
+if (location != null) {
+  print('Selected: ${location.uri}');
+}
+```
+
+### Simple directory pick (web)
+
+```dart
+import 'package:dir_picker/dir_picker.dart';
+import 'package:web/web.dart' as web; // required to use FileSystemDirectoryHandle
+
+final location = await DirPicker.pick();
+if (location is WebSelectedLocation) {
+  final web.FileSystemDirectoryHandle handle = location.handle;
+  // list files, read contents, etc.
 }
 ```
 
 ### Custom dialog labels
 
 ```dart
-final uri = await DirPicker.pick(
+final location = await DirPicker.pick(
   macosOptions: const MacosOptions(
     acceptLabel: 'Use This Folder',
     message: 'Select the folder to import from',
@@ -206,7 +226,7 @@ final uri = await DirPicker.pick(
 ### Android — enable persistent permission
 
 ```dart
-final uri = await DirPicker.pick(
+final location = await DirPicker.pick(
   androidOptions: const AndroidOptions(shouldPersist: true),
 );
 ```
@@ -216,7 +236,7 @@ final uri = await DirPicker.pick(
 ### `DirPicker.pick`
 
 ```dart
-static Future<Uri?> pick({
+static Future<SelectedLocation?> pick({
   AndroidOptions? androidOptions,
   LinuxOptions? linuxOptions,
   MacosOptions? macosOptions,
@@ -224,7 +244,7 @@ static Future<Uri?> pick({
 })
 ```
 
-Returns the selected directory as a `Uri`, or `null` if the user cancelled.
+Returns a `SelectedLocation` (either `NativeLocation` or `WebSelectedLocation`), or `null` if the user cancelled.
 
 ## Platform Support
 
