@@ -18,7 +18,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _pickDirectory() async {
     try {
-      final uri = await DirPicker.pick(
+      final location = await DirPicker.pick(
         androidOptions: const AndroidOptions(shouldPersist: true),
         macosOptions: const MacosOptions(
           acceptLabel: 'Select Directory',
@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         ),
       );
       setState(() {
-        _result = uri != null ? uri.toString() : 'Cancelled';
+        _result = location != null ? location.toString() : 'Cancelled';
       });
     } catch (e) {
       setState(() {

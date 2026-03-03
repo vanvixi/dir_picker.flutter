@@ -2,6 +2,11 @@ import 'dart:io';
 
 import 'package:dbus/dbus.dart';
 
+import '../../options/android_options.dart';
+import '../../options/linux_options.dart';
+import '../../options/macos_options.dart';
+import '../../options/windows_options.dart';
+import '../../location/selected_location.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 
 /// Thrown when a picker method is not available on the current system
@@ -26,7 +31,7 @@ class DirPickerLinux extends DirPickerPlatform {
   }
 
   @override
-  Future<Uri?> pick({
+  Future<SelectedLocation?> pick({
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
@@ -39,7 +44,9 @@ class DirPickerLinux extends DirPickerPlatform {
       () => _pickWithKdialog(opts),
     ]) {
       try {
-        return await picker();
+        final uri = await picker();
+        if (uri == null) return null;
+        return NativeLocation(uri);
       } on _PickerUnavailableException {
         continue;
       }

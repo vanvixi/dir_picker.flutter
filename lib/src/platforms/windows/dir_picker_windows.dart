@@ -4,6 +4,11 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
+import '../../options/android_options.dart';
+import '../../options/linux_options.dart';
+import '../../options/macos_options.dart';
+import '../../options/windows_options.dart';
+import '../../location/selected_location.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -159,7 +164,7 @@ class DirPickerWindows extends DirPickerPlatform {
   /// Runs on a separate isolate because the COM dialog blocks the calling
   /// thread until the user closes it.
   @override
-  Future<Uri?> pick({
+  Future<SelectedLocation?> pick({
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
@@ -170,7 +175,7 @@ class DirPickerWindows extends DirPickerPlatform {
       () => _pickSync(opts.title, opts.acceptLabel),
     );
     if (path == null) return null;
-    return Uri.directory(path, windows: true);
+    return NativeLocation(Uri.directory(path, windows: true));
   }
 
   static String? _pickSync(String title, String acceptLabel) {
