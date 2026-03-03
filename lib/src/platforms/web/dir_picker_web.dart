@@ -1,17 +1,12 @@
 import 'dart:async';
 import 'dart:js_interop';
 
+import 'package:web/web.dart' as web;
+
 import '../../platform_interface/dir_picker_platform.dart';
 
-extension type _FileSystemDirectoryHandle._(JSObject _) implements JSObject {
-  external String get name;
-}
-
-@JS('window')
-external _Window get _window;
-
-extension type _Window._(JSObject _) implements JSObject {
-  external JSPromise<_FileSystemDirectoryHandle> showDirectoryPicker();
+extension on web.Window {
+  external JSPromise<web.FileSystemDirectoryHandle> showDirectoryPicker();
 }
 
 /// DirPicker implementation for Web.
@@ -33,7 +28,7 @@ class DirPickerWeb extends DirPickerPlatform {
     WindowsOptions? windowsOptions,
   }) async {
     try {
-      final handle = await _window.showDirectoryPicker().toDart;
+      final handle = await web.window.showDirectoryPicker().toDart;
       return Uri(path: handle.name);
     } catch (e) {
       // AbortError → user cancelled; NotSupportedError → browser unsupported
