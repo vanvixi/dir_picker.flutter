@@ -1,3 +1,10 @@
+## 0.3.0
+
+* **Breaking:** `DirPicker.pick()` now returns `SelectedLocation?` instead of `Uri?`
+* Add `SelectedLocation` abstract class with `NativeLocation` (native platforms) and `WebSelectedLocation` (web)
+* Web: return `WebSelectedLocation` wrapping `FileSystemDirectoryHandle` — use `.handle` to access directory contents via the File System Access API
+* Web: throw `UnsupportedError` on browsers that do not support `showDirectoryPicker()` (Firefox/Safari)
+
 ## 0.2.1
 
 * Fix Swift Package Manager detection on pub.dev
