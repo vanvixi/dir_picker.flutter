@@ -29,16 +29,31 @@ class DirPicker {
 
   /// Picks a directory and returns a [SelectedLocation], or `null` if cancelled.
   ///
-  /// On native platforms, [SelectedLocation.uri] contains the full directory URI.
+  /// ## Platform behavior
   ///
-  /// On web, returns a [WebSelectedLocation]. [SelectedLocation.uri] is `null`
-  /// (browsers restrict path access). Use [WebSelectedLocation.handle] to
-  /// access directory contents via the File System Access API — requires
-  /// `package:web` in your app's dependencies to work with
-  /// [web.FileSystemDirectoryHandle] directly.
+  /// - **Android**: Uses the Storage Access Framework (`ACTION_OPEN_DOCUMENT_TREE`).
+  ///   No manifest permissions required. Set [AndroidOptions.shouldPersist] to
+  ///   retain access across reboots via persistable URI permission.
   ///
-  /// Throws [UnsupportedError] if the browser does not support
-  /// `showDirectoryPicker()` (Firefox/Safari).
+  /// - **iOS**: Uses `UIDocumentPickerViewController` to let the user pick a folder.
+  ///
+  /// - **macOS**: Uses `NSOpenPanel`. Requires the
+  ///   `com.apple.security.files.user-selected.read-write` entitlement in your
+  ///   app's `.entitlements` files. Customize with [MacosOptions].
+  ///
+  /// - **Windows**: Uses the COM `IFileOpenDialog` interface (Win32).
+  ///   Customize the dialog title and button label with [WindowsOptions].
+  ///
+  /// - **Linux**: Uses the XDG Desktop Portal (`org.freedesktop.portal.FileChooser`)
+  ///   with automatic fallback to `zenity` (GNOME) then `kdialog` (KDE).
+  ///   Customize with [LinuxOptions].
+  ///
+  /// - **Web**: Uses the File System Access API (`window.showDirectoryPicker()`).
+  ///   Supported on Chrome 86+ and Edge 86+. Throws [UnsupportedError] on
+  ///   Firefox and Safari. Returns a [WebSelectedLocation] — [SelectedLocation.uri]
+  ///   is always `null` (browsers restrict path access); use
+  ///   [WebSelectedLocation.handle] (`FileSystemDirectoryHandle`) to access
+  ///   directory contents. Requires `package:web` in your app's dependencies.
   static Future<SelectedLocation?> pick({
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
