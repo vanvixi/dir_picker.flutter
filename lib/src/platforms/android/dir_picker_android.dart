@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import '../../location/picked_location.dart';
 import '../../options/android_options.dart';
 import '../../options/linux_options.dart';
 import '../../options/macos_options.dart';
 import '../../options/windows_options.dart';
-import '../../location/selected_location.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 import 'native.g.dart' as native;
 
@@ -18,20 +18,20 @@ class DirPickerAndroid extends DirPickerPlatform {
   }
 
   @override
-  Future<SelectedLocation?> pick({
+  Future<PickedLocation?> pick({
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
     WindowsOptions? windowsOptions,
   }) {
-    final completer = Completer<SelectedLocation?>();
+    final completer = Completer<PickedLocation?>();
 
     final callback = native.PickerCallback.implement(
       native.$PickerCallback(
         onSuccess: (jUri) {
           final uri = Uri.parse(jUri.toDartString());
           jUri.release();
-          completer.complete(NativeLocation(uri));
+          completer.complete(NativePickedLocation(uri));
         },
         onCancelled: () => completer.complete(null),
         onError: (jCode, jMessage) {

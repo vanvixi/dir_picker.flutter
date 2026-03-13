@@ -1,5 +1,5 @@
 /// Base class for the result of a directory pick operation.
-abstract class SelectedLocation {
+abstract class PickedLocation {
   /// The URI of the selected directory.
   ///
   /// Returns `null` on web — browsers do not expose full filesystem paths
@@ -7,9 +7,9 @@ abstract class SelectedLocation {
   Uri? get uri;
 }
 
-/// A [SelectedLocation] on native platforms (Android, iOS, macOS, Windows, Linux).
-class NativeLocation extends SelectedLocation {
-  NativeLocation(this._uri);
+/// A [PickedLocation] on native platforms (Android, iOS, macOS, Windows, Linux).
+class NativePickedLocation extends PickedLocation {
+  NativePickedLocation(this._uri);
 
   final Uri _uri;
 
@@ -17,5 +17,5 @@ class NativeLocation extends SelectedLocation {
   Uri get uri => _uri;
 
   @override
-  String toString() => 'NativeLocation($uri)';
+  String toString() => 'NativePickedLocation($uri)';
 }

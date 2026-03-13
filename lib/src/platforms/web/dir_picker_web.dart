@@ -4,12 +4,12 @@ import 'dart:js_interop_unsafe';
 
 import 'package:web/web.dart' as web;
 
+import '../../location/picked_location.dart';
+import '../../location/web_picked_location.dart';
 import '../../options/android_options.dart';
 import '../../options/linux_options.dart';
 import '../../options/macos_options.dart';
 import '../../options/windows_options.dart';
-import '../../location/selected_location.dart';
-import '../../location/web_selected_location.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 
 extension on web.Window {
@@ -24,10 +24,10 @@ bool get _supportsShowDirectoryPicker =>
 ///
 /// Uses the File System Access API (`window.showDirectoryPicker()`).
 /// Supported in Chrome/Edge 86+. Throws [UnsupportedError] in Firefox/Safari.
-/// Returns a [WebSelectedLocation] wrapping the [FileSystemDirectoryHandle].
+/// Returns a [WebPickedLocation] wrapping the [FileSystemDirectoryHandle].
 ///
-/// Note: [SelectedLocation.uri] is always `null` on web — browsers do not
-/// expose full filesystem paths. Use [WebSelectedLocation.handle] to access
+/// Note: [PickedLocation.uri] is always `null` on web — browsers do not
+/// expose full filesystem paths. Use [WebPickedLocation.handle] to access
 /// directory contents via the File System Access API.
 class DirPickerWeb extends DirPickerPlatform {
   static void registerWith(dynamic registrar) {
@@ -35,7 +35,7 @@ class DirPickerWeb extends DirPickerPlatform {
   }
 
   @override
-  Future<SelectedLocation?> pick({
+  Future<PickedLocation?> pick({
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
@@ -49,7 +49,7 @@ class DirPickerWeb extends DirPickerPlatform {
     }
     try {
       final handle = await web.window.showDirectoryPicker().toDart;
-      return WebSelectedLocation(handle);
+      return WebPickedLocation(handle);
     } catch (e) {
       // AbortError → user cancelled
       if (e.toString().contains('AbortError')) return null;

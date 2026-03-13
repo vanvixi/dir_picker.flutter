@@ -4,11 +4,11 @@ import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
 
+import '../../location/picked_location.dart';
 import '../../options/android_options.dart';
 import '../../options/linux_options.dart';
 import '../../options/macos_options.dart';
 import '../../options/windows_options.dart';
-import '../../location/selected_location.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 import 'native.g.dart' as native;
 
@@ -35,13 +35,13 @@ class DirPickerDarwin extends DirPickerPlatform {
   late final native.DirPickerBindings _bindings;
 
   @override
-  Future<SelectedLocation?> pick({
+  Future<PickedLocation?> pick({
     AndroidOptions? androidOptions,
     LinuxOptions? linuxOptions,
     MacosOptions? macosOptions,
     WindowsOptions? windowsOptions,
   }) async {
-    final completer = Completer<SelectedLocation?>();
+    final completer = Completer<PickedLocation?>();
     final port = ReceivePort();
 
     port.listen((message) {
@@ -56,7 +56,7 @@ class DirPickerDarwin extends DirPickerPlatform {
       switch (type) {
         case 0: // Success
           final uri = Uri.parse(message[1] as String);
-          completer.complete(NativeLocation(uri));
+          completer.complete(NativePickedLocation(uri));
         case 1: // Cancelled
           completer.complete(null);
         case 2: // Error

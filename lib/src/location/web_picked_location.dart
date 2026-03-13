@@ -1,16 +1,16 @@
 import 'package:web/web.dart' as web;
 
-import 'selected_location.dart';
+import 'picked_location.dart';
 
-/// A [SelectedLocation] on the web platform.
+/// A [PickedLocation] on the web platform.
 ///
 /// Wraps a [FileSystemDirectoryHandle] from the File System Access API.
 /// Use [handle] to list or read files within the selected directory.
 ///
 /// [uri] is always `null` — browsers restrict access to the full filesystem
 /// path for security reasons. Use [name] to get the directory name.
-class WebSelectedLocation extends SelectedLocation {
-  WebSelectedLocation(this.handle);
+class WebPickedLocation extends PickedLocation {
+  WebPickedLocation(this.handle);
 
   final web.FileSystemDirectoryHandle handle;
 
@@ -21,5 +21,5 @@ class WebSelectedLocation extends SelectedLocation {
   Uri? get uri => null;
 
   @override
-  String toString() => 'WebSelectedLocation(name: $name)';
+  String toString() => 'WebPickedLocation(name: $name)';
 }

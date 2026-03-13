@@ -5,7 +5,7 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-A Flutter plugin for picking a directory across all platforms using native system dialogs. Returns a `SelectedLocation?` — null if the user cancelled.
+A Flutter plugin for picking a directory across all platforms using native system dialogs. Returns a `PickedLocation?` — null if the user cancelled.
 
 ## Features
 
@@ -95,7 +95,7 @@ No configuration needed. The plugin uses the [File System Access API](https://de
 
 **Browser support:** Chrome 86+ and Edge 86+. Not supported in Firefox or Safari.
 
-> **Note:** On web, `pick()` returns a `WebSelectedLocation` wrapping a `FileSystemDirectoryHandle`. Use `.handle` to access directory contents via the File System Access API. `SelectedLocation.uri` is always `null` on web — browsers do not expose full filesystem paths. Requires `package:web` in your app's dependencies to work with the handle directly.
+> **Note:** On web, `pick()` returns a `WebPickedLocation` wrapping a `FileSystemDirectoryHandle`. Use `.handle` to access directory contents via the File System Access API. `PickedLocation.uri` is always `null` on web — browsers do not expose full filesystem paths. Requires `package:web` in your app's dependencies to work with the handle directly.
 
 </details>
 
@@ -104,11 +104,11 @@ No configuration needed. The plugin uses the [File System Access API](https://de
 ```dart
 import 'package:dir_picker/dir_picker.dart';
 
-final SelectedLocation? location = await DirPicker.pick();
+final PickedLocation? location = await DirPicker.pick();
 
 if (location == null) {
   print('Cancelled');
-} else if (location is WebSelectedLocation) {
+} else if (location is WebPickedLocation) {
   // Web: use handle to access directory contents via File System Access API
   // Requires package:web in your app's dependencies
   final handle = location.handle; // FileSystemDirectoryHandle
@@ -163,11 +163,11 @@ final location = await DirPicker.pick(
 
 ### Return value
 
-| Result                  | Meaning                                                                                           |
-|-------------------------|---------------------------------------------------------------------------------------------------|
-| `NativeLocation`        | Native platforms — use `.uri` to get the selected directory URI.                                  |
-| `WebSelectedLocation`   | Web — use `.handle` (`FileSystemDirectoryHandle`) to access directory contents. `.uri` is `null`. |
-| `null`                  | The user cancelled.                                                                               |
+| Result                 | Meaning                                                                                           |
+|------------------------|---------------------------------------------------------------------------------------------------|
+| `NativePickedLocation` | Native platforms — use `.uri` to get the selected directory URI.                                  |
+| `WebPickedLocation`    | Web — use `.handle` (`FileSystemDirectoryHandle`) to access directory contents. `.uri` is `null`. |
+| `null`                 | The user cancelled.                                                                               |
 
 ### Native Mechanisms
 
@@ -198,7 +198,7 @@ import 'package:dir_picker/dir_picker.dart';
 import 'package:web/web.dart' as web; // required to use FileSystemDirectoryHandle
 
 final location = await DirPicker.pick();
-if (location is WebSelectedLocation) {
+if (location is WebPickedLocation) {
   final web.FileSystemDirectoryHandle handle = location.handle;
   // list files, read contents, etc.
 }
@@ -236,7 +236,7 @@ final location = await DirPicker.pick(
 ### `DirPicker.pick`
 
 ```dart
-static Future<SelectedLocation?> pick({
+static Future<PickedLocation?> pick({
   AndroidOptions? androidOptions,
   LinuxOptions? linuxOptions,
   MacosOptions? macosOptions,
@@ -244,13 +244,13 @@ static Future<SelectedLocation?> pick({
 })
 ```
 
-Returns a `SelectedLocation` (either `NativeLocation` or `WebSelectedLocation`), or `null` if the user cancelled.
+Returns a `PickedLocation` (either `NativePickedLocation` or `WebPickedLocation`), or `null` if the user cancelled.
 
 ## Platform Support
 
 | Android | iOS | macOS | Windows | Linux | Web |
-|:-------:|:---:|:-----:|:-------:|:-----:|:---:|
-|    ✅    |  ✅  |   ✅   |    ✅    |   ✅   |  ✅  |
+| :-----: | :-: | :---: | :-----: | :---: | :-: |
+|   ✅    | ✅  |  ✅   |   ✅    |  ✅   | ✅  |
 
 **Minimum versions:**
 
