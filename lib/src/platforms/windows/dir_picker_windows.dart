@@ -5,10 +5,7 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 
 import '../../location/picked_location.dart';
-import '../../options/android_options.dart';
-import '../../options/linux_options.dart';
-import '../../options/macos_options.dart';
-import '../../options/windows_options.dart';
+import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -164,13 +161,8 @@ class DirPickerWindows extends DirPickerPlatform {
   /// Runs on a separate isolate because the COM dialog blocks the calling
   /// thread until the user closes it.
   @override
-  Future<PickedLocation?> pick({
-    AndroidOptions? androidOptions,
-    LinuxOptions? linuxOptions,
-    MacosOptions? macosOptions,
-    WindowsOptions? windowsOptions,
-  }) async {
-    final opts = windowsOptions ?? const WindowsOptions();
+  Future<PickedLocation?> pick({PickOptions? options}) async {
+    final opts = options is WindowsOptions ? options : const WindowsOptions();
     final path = await Isolate.run(
       () => _pickSync(opts.title, opts.acceptLabel),
     );

@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:dbus/dbus.dart';
 
 import '../../location/picked_location.dart';
-import '../../options/android_options.dart';
-import '../../options/linux_options.dart';
-import '../../options/macos_options.dart';
-import '../../options/windows_options.dart';
+import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 
 /// Thrown when a picker method is not available on the current system
@@ -31,13 +28,8 @@ class DirPickerLinux extends DirPickerPlatform {
   }
 
   @override
-  Future<PickedLocation?> pick({
-    AndroidOptions? androidOptions,
-    LinuxOptions? linuxOptions,
-    MacosOptions? macosOptions,
-    WindowsOptions? windowsOptions,
-  }) async {
-    final opts = linuxOptions ?? const LinuxOptions();
+  Future<PickedLocation?> pick({PickOptions? options}) async {
+    final opts = options is LinuxOptions ? options : const LinuxOptions();
     for (final picker in [
       () => _pickWithPortal(opts),
       () => _pickWithZenity(opts),

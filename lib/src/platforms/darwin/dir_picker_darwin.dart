@@ -5,10 +5,7 @@ import 'dart:isolate';
 import 'package:ffi/ffi.dart';
 
 import '../../location/picked_location.dart';
-import '../../options/android_options.dart';
-import '../../options/linux_options.dart';
-import '../../options/macos_options.dart';
-import '../../options/windows_options.dart';
+import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 import 'native.g.dart' as native;
 
@@ -35,12 +32,7 @@ class DirPickerDarwin extends DirPickerPlatform {
   late final native.DirPickerBindings _bindings;
 
   @override
-  Future<PickedLocation?> pick({
-    AndroidOptions? androidOptions,
-    LinuxOptions? linuxOptions,
-    MacosOptions? macosOptions,
-    WindowsOptions? windowsOptions,
-  }) async {
+  Future<PickedLocation?> pick({PickOptions? options}) async {
     final completer = Completer<PickedLocation?>();
     final port = ReceivePort();
 
@@ -72,7 +64,7 @@ class DirPickerDarwin extends DirPickerPlatform {
 
     // Allocate C strings for macOS options; Swift copies them synchronously
     // before dispatching to the main queue, so freeing after the call is safe.
-    final opts = macosOptions ?? const MacosOptions();
+    final opts = options is MacosOptions ? options : const MacosOptions();
     final acceptLabelPtr = opts.acceptLabel.toNativeUtf8().cast<Char>();
     final messagePtr = opts.message.toNativeUtf8().cast<Char>();
 

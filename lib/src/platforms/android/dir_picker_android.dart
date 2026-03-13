@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import '../../location/picked_location.dart';
-import '../../options/android_options.dart';
-import '../../options/linux_options.dart';
-import '../../options/macos_options.dart';
-import '../../options/windows_options.dart';
+import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 import 'native.g.dart' as native;
 
@@ -18,12 +15,9 @@ class DirPickerAndroid extends DirPickerPlatform {
   }
 
   @override
-  Future<PickedLocation?> pick({
-    AndroidOptions? androidOptions,
-    LinuxOptions? linuxOptions,
-    MacosOptions? macosOptions,
-    WindowsOptions? windowsOptions,
-  }) {
+  Future<PickedLocation?> pick({PickOptions? options}) {
+    final androidOptions =
+        options is AndroidOptions ? options : AndroidOptions();
     final completer = Completer<PickedLocation?>();
 
     final callback = native.PickerCallback.implement(
@@ -45,7 +39,7 @@ class DirPickerAndroid extends DirPickerPlatform {
     );
 
     // Non-blocking: Kotlin launches coroutine internally
-    native.DirPicker.pick(androidOptions?.shouldPersist ?? true, callback);
+    native.DirPicker.pick(androidOptions.shouldPersist, callback);
 
     return completer.future.whenComplete(() => callback.release());
   }

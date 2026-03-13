@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:dir_picker/dir_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,19 +19,22 @@ class _MyAppState extends State<MyApp> {
   Future<void> _pickDirectory() async {
     try {
       final location = await DirPicker.pick(
-        androidOptions: const AndroidOptions(shouldPersist: true),
-        macosOptions: const MacosOptions(
-          acceptLabel: 'Select Directory',
-          message: 'Please choose a directory to continue',
-        ),
-        linuxOptions: const LinuxOptions(
-          title: 'Select a directory',
-          acceptLabel: 'Choose',
-        ),
-        windowsOptions: const WindowsOptions(
-          title: 'Select a directory',
-          acceptLabel: 'Choose',
-        ),
+        options: switch (defaultTargetPlatform) {
+          TargetPlatform.android => PickOptions.android(shouldPersist: true),
+          TargetPlatform.macOS => PickOptions.macos(
+            acceptLabel: 'Select Directory',
+            message: 'Please choose a directory to continue',
+          ),
+          TargetPlatform.linux => PickOptions.linux(
+            title: 'Select a directory',
+            acceptLabel: 'Choose',
+          ),
+          TargetPlatform.windows => PickOptions.windows(
+            title: 'Select a directory',
+            acceptLabel: 'Choose',
+          ),
+          _ => null,
+        },
       );
       setState(() {
         _result = location != null ? location.toString() : 'Cancelled';

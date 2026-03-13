@@ -6,10 +6,7 @@ import 'package:web/web.dart' as web;
 
 import '../../location/picked_location.dart';
 import '../../location/web_picked_location.dart';
-import '../../options/android_options.dart';
-import '../../options/linux_options.dart';
-import '../../options/macos_options.dart';
-import '../../options/windows_options.dart';
+import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
 
 extension on web.Window {
@@ -35,12 +32,7 @@ class DirPickerWeb extends DirPickerPlatform {
   }
 
   @override
-  Future<PickedLocation?> pick({
-    AndroidOptions? androidOptions,
-    LinuxOptions? linuxOptions,
-    MacosOptions? macosOptions,
-    WindowsOptions? windowsOptions,
-  }) async {
+  Future<PickedLocation?> pick({PickOptions? options}) async {
     if (!_supportsShowDirectoryPicker) {
       throw UnsupportedError(
         'showDirectoryPicker() is not supported in this browser. '

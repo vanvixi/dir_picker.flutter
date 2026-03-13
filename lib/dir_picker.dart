@@ -1,18 +1,12 @@
 import 'src/location/picked_location.dart';
-import 'src/options/android_options.dart';
-import 'src/options/linux_options.dart';
-import 'src/options/macos_options.dart';
-import 'src/options/windows_options.dart';
+import 'src/options/pick_options.dart';
 import 'src/platform_interface/dir_picker_platform.dart';
 
 export 'src/location/picked_location.dart';
 // WebPickedLocation — web only, stub on native.
 export 'src/location/web_picked_location.dart'
     if (dart.library.io) 'src/location/web_selected_location_stub.dart';
-export 'src/options/android_options.dart';
-export 'src/options/linux_options.dart';
-export 'src/options/macos_options.dart';
-export 'src/options/windows_options.dart';
+export 'src/options/pick_options.dart';
 export 'src/platform_interface/dir_picker_platform.dart' show DirPickerPlatform;
 // IO platforms (Windows, Linux, Android, Darwin) — or their stubs on web.
 export 'src/platforms/io_platforms.dart'
@@ -51,16 +45,6 @@ class DirPicker {
   ///   is always `null` (browsers restrict path access); use
   ///   [WebPickedLocation.handle] (`FileSystemDirectoryHandle`) to access
   ///   directory contents. Requires `package:web` in your app's dependencies.
-  static Future<PickedLocation?> pick({
-    AndroidOptions? androidOptions,
-    LinuxOptions? linuxOptions,
-    MacosOptions? macosOptions,
-    WindowsOptions? windowsOptions,
-  }) =>
-      DirPickerPlatform.instance.pick(
-        androidOptions: androidOptions,
-        linuxOptions: linuxOptions,
-        macosOptions: macosOptions,
-        windowsOptions: windowsOptions,
-      );
+  static Future<PickedLocation?> pick({PickOptions? options}) =>
+      DirPickerPlatform.instance.pick(options: options);
 }

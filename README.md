@@ -121,16 +121,27 @@ if (location == null) {
 
 ## Platform Options
 
-Each platform exposes its own options class for customizing the dialog. Pass them to `DirPicker.pick()`:
+Pass a `PickOptions` to `DirPicker.pick()` to customize the dialog for the current platform:
 
 ```dart
 final location = await DirPicker.pick(
-  androidOptions: const AndroidOptions(shouldPersist: true),
-  macosOptions: const MacosOptions(acceptLabel: 'Choose', message: 'Select a project folder'),
-  linuxOptions: const LinuxOptions(title: 'Select Folder', acceptLabel: 'Choose'),
-  windowsOptions: const WindowsOptions(title: 'Select Folder', acceptLabel: 'Choose'),
+  options: PickOptions.android(shouldPersist: true),
+);
+
+final location = await DirPicker.pick(
+  options: PickOptions.macos(acceptLabel: 'Choose', message: 'Select a project folder'),
+);
+
+final location = await DirPicker.pick(
+  options: PickOptions.linux(title: 'Select Folder', acceptLabel: 'Choose'),
+);
+
+final location = await DirPicker.pick(
+  options: PickOptions.windows(title: 'Select Folder', acceptLabel: 'Choose'),
 );
 ```
+
+Options for other platforms are silently ignored — only the one matching the current platform is applied.
 
 ### AndroidOptions
 
@@ -208,15 +219,15 @@ if (location is WebPickedLocation) {
 
 ```dart
 final location = await DirPicker.pick(
-  macosOptions: const MacosOptions(
+  options: PickOptions.macos(
     acceptLabel: 'Use This Folder',
     message: 'Select the folder to import from',
   ),
-  linuxOptions: const LinuxOptions(
-    title: 'Import Folder',
-    acceptLabel: 'Use This Folder',
-  ),
-  windowsOptions: const WindowsOptions(
+);
+
+// or on Linux/Windows:
+final location = await DirPicker.pick(
+  options: PickOptions.linux(
     title: 'Import Folder',
     acceptLabel: 'Use This Folder',
   ),
@@ -227,7 +238,7 @@ final location = await DirPicker.pick(
 
 ```dart
 final location = await DirPicker.pick(
-  androidOptions: const AndroidOptions(shouldPersist: true),
+  options: PickOptions.android(shouldPersist: true),
 );
 ```
 
@@ -236,15 +247,12 @@ final location = await DirPicker.pick(
 ### `DirPicker.pick`
 
 ```dart
-static Future<PickedLocation?> pick({
-  AndroidOptions? androidOptions,
-  LinuxOptions? linuxOptions,
-  MacosOptions? macosOptions,
-  WindowsOptions? windowsOptions,
-})
+static Future<PickedLocation?> pick({PickOptions? options})
 ```
 
 Returns a `PickedLocation` (either `NativePickedLocation` or `WebPickedLocation`), or `null` if the user cancelled.
+
+`options` is a `PickOptions` sealed class — pass the platform-specific subclass using its factory constructor (e.g. `PickOptions.android(...)`, `PickOptions.macos(...)`). Options for other platforms are ignored.
 
 ## Platform Support
 
