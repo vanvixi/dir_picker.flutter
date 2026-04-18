@@ -1,3 +1,31 @@
+## 0.4.0
+
+* **Breaking:** `DirPicker.pick()` now takes a single `PickOptions? options` parameter instead of separate per-platform named parameters (`androidOptions`, `linuxOptions`, `macosOptions`, `windowsOptions`)
+* **Breaking:** Rename `SelectedLocation` → `PickedLocation`, `NativeLocation` → `NativePickedLocation`, `WebSelectedLocation` → `WebPickedLocation`
+* Add `PickOptions` sealed class with platform-specific factory constructors: `PickOptions.android(...)`, `PickOptions.macos(...)`, `PickOptions.linux(...)`, `PickOptions.windows(...)`
+
+### Migration guide
+
+```dart
+// Before
+DirPicker.pick(androidOptions: AndroidOptions(shouldPersist: true));
+DirPicker.pick(macosOptions: MacosOptions(acceptLabel: 'Open'));
+
+// After
+DirPicker.pick(options: PickOptions.android(shouldPersist: true));
+DirPicker.pick(options: PickOptions.macos(acceptLabel: 'Open'));
+```
+
+```dart
+// Before
+if (location is NativeLocation) { ... }
+if (location is WebSelectedLocation) { ... }
+
+// After
+if (location is NativePickedLocation) { ... }
+if (location is WebPickedLocation) { ... }
+```
+
 ## 0.3.1
 
 * Add README usage examples for handling `WebSelectedLocation` on web and `NativeLocation` on native
