@@ -1,42 +1,53 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:ffigen/ffigen.dart';
 
+/// Generates FFI bindings for Darwin (iOS/macOS) native classes.
+///
+/// Run with:
+///   dart run tool/ffigen.dart
 void main() {
-  // Using Platform.script.resolve('../') as per your documentation
-  // to ensure paths are relative to the project root.
   final packageRoot = Platform.script.resolve('../');
+
+  print('Generating Darwin bindings...');
+  final headerUri = packageRoot.resolve(
+    'darwin/dir_picker/Sources/dir_picker/include/dir_picker_ffi.h',
+  );
 
   FfiGenerator(
     // 1. Output configuration
     output: Output(
       dartFile: packageRoot.resolve('lib/src/platforms/darwin/native.g.dart'),
-      preamble: '''
-// ignore_for_file: always_specify_types
-// ignore_for_file: camel_case_types
-// ignore_for_file: non_constant_identifier_names
-''',
       style: const DynamicLibraryBindings(
         wrapperName: 'DirPickerBindings',
         wrapperDocComment: 'Bindings for Darwin (iOS/macOS) dir_picker_ffi.h.',
       ),
+      commentType: CommentType(CommentStyle.any, CommentLength.full),
     ),
 
     // 2. Header configuration
     headers: Headers(
-      entryPoints: [
-        packageRoot.resolve(
-            'darwin/dir_picker/Sources/dir_picker/include/dir_picker_ffi.h'),
-      ],
+      entryPoints: [headerUri],
+      include: (uri) => uri == headerUri,
     ),
 
     // 3. Declaration filters
-    functions: Functions.includeSet({
-      'dir_picker_init_dart_api_dl',
-      'dir_picker_pick',
-    }),
+    functions: Functions(
+      include: Declarations.includeSet({
+        'dir_picker_init_dart_api_dl',
+        'dir_picker_pick',
+      }),
+      rename: (decl) {
+        final stripped = decl.originalName.replaceFirst('dir_picker_', '');
+        return stripped.replaceAllMapped(
+          RegExp(r'_([a-z])'),
+          (m) => m.group(1)!.toUpperCase(),
+        );
+      },
+    ),
   ).generate();
 
-  // ignore: avoid_print
   print('Generated Darwin bindings successfully.');
 }

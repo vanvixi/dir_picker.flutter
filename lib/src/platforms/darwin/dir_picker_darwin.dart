@@ -17,7 +17,7 @@ class DirPickerDarwin extends DirPickerPlatform {
     final dylib = DynamicLibrary.process();
     _bindings = native.DirPickerBindings(dylib);
 
-    final result = _bindings.dir_picker_init_dart_api_dl(
+    final result = _bindings.initDartApiDl(
       NativeApi.initializeApiDLData,
     );
     if (result != 0) {
@@ -69,8 +69,7 @@ class DirPickerDarwin extends DirPickerPlatform {
     final messagePtr = opts.message.toNativeUtf8().cast<Char>();
 
     try {
-      _bindings.dir_picker_pick(
-          port.sendPort.nativePort, acceptLabelPtr, messagePtr);
+      _bindings.pick(port.sendPort.nativePort, acceptLabelPtr, messagePtr);
     } finally {
       calloc.free(acceptLabelPtr);
       calloc.free(messagePtr);
