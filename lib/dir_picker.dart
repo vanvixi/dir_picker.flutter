@@ -5,7 +5,7 @@ import 'src/platform_interface/dir_picker_platform.dart';
 export 'src/location/picked_location.dart';
 // WebPickedLocation — web only, stub on native.
 export 'src/location/web_picked_location.dart'
-    if (dart.library.io) 'src/location/web_selected_location_stub.dart';
+    if (dart.library.io) 'src/location/web_picked_location_stub.dart';
 export 'src/options/pick_options.dart';
 export 'src/platform_interface/dir_picker_platform.dart' show DirPickerPlatform;
 // IO platforms (Windows, Linux, Android, Darwin) — or their stubs on web.
