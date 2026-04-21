@@ -27,7 +27,7 @@ class DirPickerAndroid extends DirPickerPlatform {
         onSuccess: (jUri) {
           final uri = Uri.parse(jUri.toDartString());
           jUri.release();
-          completer.complete(NativePickedLocation(uri));
+          completer.complete(IOPickedLocation(uri));
         },
         onCancelled: () => completer.complete(null),
         onError: (jCode, jMessage) {

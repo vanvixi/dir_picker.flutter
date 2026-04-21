@@ -38,7 +38,7 @@ class DirPickerLinux extends DirPickerPlatform {
       try {
         final uri = await picker();
         if (uri == null) return null;
-        return NativePickedLocation(uri);
+        return IOPickedLocation(uri);
       } on _PickerUnavailableException {
         continue;
       }

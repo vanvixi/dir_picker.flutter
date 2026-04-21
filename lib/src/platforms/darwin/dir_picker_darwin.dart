@@ -48,7 +48,7 @@ class DirPickerDarwin extends DirPickerPlatform {
       switch (type) {
         case 0: // Success
           final uri = Uri.parse(message[1] as String);
-          completer.complete(NativePickedLocation(uri));
+          completer.complete(IOPickedLocation(uri));
         case 1: // Cancelled
           completer.complete(null);
         case 2: // Error

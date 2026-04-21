@@ -167,7 +167,7 @@ class DirPickerWindows extends DirPickerPlatform {
       () => _pickSync(opts.title, opts.acceptLabel),
     );
     if (path == null) return null;
-    return NativePickedLocation(Uri.directory(path, windows: true));
+    return IOPickedLocation(Uri.directory(path, windows: true));
   }
 
   static String? _pickSync(String title, String acceptLabel) {

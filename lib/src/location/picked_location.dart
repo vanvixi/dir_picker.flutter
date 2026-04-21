@@ -8,8 +8,8 @@ abstract class PickedLocation {
 }
 
 /// A [PickedLocation] on native platforms (Android, iOS, macOS, Windows, Linux).
-class NativePickedLocation extends PickedLocation {
-  NativePickedLocation(this._uri);
+class IOPickedLocation extends PickedLocation {
+  IOPickedLocation(this._uri);
 
   final Uri _uri;
 
@@ -17,5 +17,5 @@ class NativePickedLocation extends PickedLocation {
   Uri get uri => _uri;
 
   @override
-  String toString() => 'NativePickedLocation($uri)';
+  String toString() => 'IOPickedLocation($uri)';
 }
