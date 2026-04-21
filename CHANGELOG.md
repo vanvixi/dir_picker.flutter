@@ -3,6 +3,10 @@
 * **Breaking:** `DirPicker.pick()` now takes a single `PickOptions? options` parameter instead of separate per-platform named parameters (`androidOptions`, `linuxOptions`, `macosOptions`, `windowsOptions`)
 * **Breaking:** Rename `SelectedLocation` → `PickedLocation`, `NativeLocation` → `NativePickedLocation`, `WebSelectedLocation` → `WebPickedLocation`
 * Add `PickOptions` sealed class with platform-specific factory constructors: `PickOptions.android(...)`, `PickOptions.macos(...)`, `PickOptions.linux(...)`, `PickOptions.windows(...)`
+* Migrate `jnigen.yaml` and `ffigen.yaml` to Dart scripts in `tool/` directory for better maintainability
+* Update `jni` dependency to `1.0.0`
+* Update `jnigen` dev dependency to `0.16.0`
+* Fix `ffigen` configuration to support latest API changes in `ffigen 20.1`
 
 ### Migration guide
 

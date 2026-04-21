@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:jni/jni.dart';
+
 import '../../location/picked_location.dart';
 import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
