@@ -20,16 +20,18 @@ class _MyAppState extends State<MyApp> {
     try {
       final location = await DirPicker.pick(
         options: switch (defaultTargetPlatform) {
-          TargetPlatform.android => PickOptions.android(shouldPersist: true),
-          TargetPlatform.macOS => PickOptions.macos(
+          TargetPlatform.android => const PickOptions.android(
+            shouldPersist: true,
+          ),
+          TargetPlatform.macOS => const PickOptions.macos(
             acceptLabel: 'Select Directory',
             message: 'Please choose a directory to continue',
           ),
-          TargetPlatform.linux => PickOptions.linux(
+          TargetPlatform.linux => const PickOptions.linux(
             title: 'Select a directory',
             acceptLabel: 'Choose',
           ),
-          TargetPlatform.windows => PickOptions.windows(
+          TargetPlatform.windows => const PickOptions.windows(
             title: 'Select a directory',
             acceptLabel: 'Choose',
           ),

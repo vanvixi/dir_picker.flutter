@@ -1,29 +1,21 @@
 /// Options for directory picking.
 sealed class PickOptions {
-  factory PickOptions.android({bool shouldPersist = false}) {
-    return AndroidOptions(shouldPersist: shouldPersist);
-  }
+  const factory PickOptions.android({bool shouldPersist}) = AndroidOptions;
 
-  factory PickOptions.macos({
-    String acceptLabel = 'Select',
-    String message = 'Choose a directory',
-  }) {
-    return MacosOptions(acceptLabel: acceptLabel, message: message);
-  }
+  const factory PickOptions.macos({
+    String acceptLabel,
+    String message,
+  }) = MacosOptions;
 
-  factory PickOptions.linux({
-    String title = 'Select Directory',
-    String acceptLabel = 'Select',
-  }) {
-    return LinuxOptions(title: title, acceptLabel: acceptLabel);
-  }
+  const factory PickOptions.linux({
+    String title,
+    String acceptLabel,
+  }) = LinuxOptions;
 
-  factory PickOptions.windows({
-    String title = 'Select Directory',
-    String acceptLabel = 'Select',
-  }) {
-    return WindowsOptions(title: title, acceptLabel: acceptLabel);
-  }
+  const factory PickOptions.windows({
+    String title,
+    String acceptLabel,
+  }) = WindowsOptions;
 }
 
 /// Options for directory picking on Android.
