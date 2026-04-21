@@ -8,10 +8,7 @@
 // ignore_for_file: type=lint, unused_import
 import 'dart:ffi' as ffi;
 
-/// Bindings for Darwin (iOS/macOS) `dir_picker_ffi.h`.
-///
-/// Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
-///
+/// Bindings for Darwin (iOS/macOS) dir_picker_ffi.h.
 class DirPickerBindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
