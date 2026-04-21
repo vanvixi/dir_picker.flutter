@@ -1,7 +1,7 @@
 ## 0.4.0
 
 * **Breaking:** `DirPicker.pick()` now takes a single `PickOptions? options` parameter instead of separate per-platform named parameters (`androidOptions`, `linuxOptions`, `macosOptions`, `windowsOptions`)
-* **Breaking:** Rename `SelectedLocation` → `PickedLocation`, `NativeLocation` → `NativePickedLocation`, `WebSelectedLocation` → `WebPickedLocation`
+* **Breaking:** Rename `SelectedLocation` → `PickedLocation`, `NativeLocation` → `IOickedLocation`, `WebSelectedLocation` → `WebPickedLocation`
 * Add `PickOptions` sealed class with platform-specific factory constructors: `PickOptions.android(...)`, `PickOptions.macos(...)`, `PickOptions.linux(...)`, `PickOptions.windows(...)`
 * Migrate `jnigen.yaml` and `ffigen.yaml` to Dart scripts in `tool/` directory for better maintainability
 * Update `jni` dependency to `1.0.0`
