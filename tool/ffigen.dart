@@ -19,7 +19,9 @@ void main() {
   FfiGenerator(
     // 1. Output configuration
     output: Output(
-      dartFile: packageRoot.resolve('lib/src/platforms/darwin/native.g.dart'),
+      dartFile: packageRoot.resolve(
+        'lib/src/platforms/darwin/native_bindings.g.dart',
+      ),
       style: const DynamicLibraryBindings(
         wrapperName: 'DirPickerBindings',
         wrapperDocComment: 'Bindings for Darwin (iOS/macOS) dir_picker_ffi.h.',

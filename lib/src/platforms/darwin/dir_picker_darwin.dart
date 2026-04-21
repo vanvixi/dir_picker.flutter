@@ -7,7 +7,7 @@ import 'package:ffi/ffi.dart';
 import '../../location/picked_location.dart';
 import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
-import 'native.g.dart' as native;
+import 'native_bindings.g.dart' as native;
 
 /// DirPicker implementation for Apple platforms (iOS and macOS).
 ///

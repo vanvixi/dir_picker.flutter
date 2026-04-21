@@ -35,7 +35,7 @@ void main(List<String> args) async {
       outputConfig: OutputConfig(
         dartConfig: DartCodeOutputConfig(
           path: packageRoot.resolve(
-            'lib/src/platforms/android/native.g.dart',
+            'lib/src/platforms/android/native_bindings.g.dart',
           ),
           structure: OutputStructure.singleFile,
         ),
