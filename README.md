@@ -176,7 +176,7 @@ Options for other platforms are silently ignored — only the one matching the c
 
 | Result                 | Meaning                                                                                           |
 |------------------------|---------------------------------------------------------------------------------------------------|
-| `NativePickedLocation` | Native platforms — use `.uri` to get the selected directory URI.                                  |
+| `IOPickedLocation`     | Native platforms — use `.uri` to get the selected directory URI.                                  |
 | `WebPickedLocation`    | Web — use `.handle` (`FileSystemDirectoryHandle`) to access directory contents. `.uri` is `null`. |
 | `null`                 | The user cancelled.                                                                               |
 
@@ -250,7 +250,7 @@ final location = await DirPicker.pick(
 static Future<PickedLocation?> pick({PickOptions? options})
 ```
 
-Returns a `PickedLocation` (either `NativePickedLocation` or `WebPickedLocation`), or `null` if the user cancelled.
+Returns a `PickedLocation` (either `IOPickedLocation` or `WebPickedLocation`), or `null` if the user cancelled.
 
 `options` is a `PickOptions` sealed class — pass the platform-specific subclass using its factory constructor (e.g. `PickOptions.android(...)`, `PickOptions.macos(...)`). Options for other platforms are ignored.
 
