@@ -1,3 +1,4 @@
+import '../location/file_system_entry.dart';
 import '../location/picked_location.dart';
 import '../options/pick_options.dart';
 
@@ -16,4 +17,9 @@ abstract class DirPickerPlatform {
   static set instance(DirPickerPlatform platform) => _instance = platform;
 
   Future<PickedLocation?> pick({PickOptions? options});
+
+  Future<List<FileSystemEntry>> listEntries(
+    PickedLocation location, {
+    bool recursive = false,
+  });
 }

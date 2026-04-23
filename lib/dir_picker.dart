@@ -1,7 +1,9 @@
+import 'src/location/file_system_entry.dart';
 import 'src/location/picked_location.dart';
 import 'src/options/pick_options.dart';
 import 'src/platform_interface/dir_picker_platform.dart';
 
+export 'src/location/file_system_entry.dart';
 export 'src/location/picked_location.dart';
 // WebPickedLocation — web only, stub on native.
 export 'src/location/web_picked_location.dart'
@@ -47,4 +49,20 @@ class DirPicker {
   ///   directory contents. Requires `package:web` in your app's dependencies.
   static Future<PickedLocation?> pick({PickOptions? options}) =>
       DirPickerPlatform.instance.pick(options: options);
+
+  /// Lists entries inside a previously picked directory.
+  ///
+  /// Returns a flat list of descendants under [location]. The picked root
+  /// itself is excluded from the results.
+  ///
+  /// When [recursive] is `false`, only immediate children are returned.
+  /// When `true`, all nested descendants are returned.
+  static Future<List<FileSystemEntry>> listEntries(
+    PickedLocation location, {
+    bool recursive = false,
+  }) =>
+      DirPickerPlatform.instance.listEntries(
+        location,
+        recursive: recursive,
+      );
 }
