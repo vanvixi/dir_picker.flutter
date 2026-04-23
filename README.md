@@ -254,28 +254,6 @@ final location = await DirPicker.pick(
 );
 ```
 
-### `DirPicker.listEntries`
-
-```dart
-static Future<List<FileSystemEntry>> listEntries(
-  PickedLocation location, {
-  bool recursive = false,
-})
-```
-
-Returns a flat list of descendants under the picked root. The root itself is excluded from the results.
-
-`FileSystemEntry` fields:
-
-| Field          | Type        | Description                                                                  |
-|----------------|-------------|------------------------------------------------------------------------------|
-| `name`         | `String`    | Basename of the entry.                                                       |
-| `relativePath` | `String`    | Path relative to the picked root, always using `/` separators.               |
-| `isDirectory`  | `bool`      | Whether the entry is a directory.                                            |
-| `uri`          | `Uri?`      | Native URI when available; always `null` on web.                             |
-| `size`         | `int?`      | File size in bytes; `null` for directories or when unavailable.              |
-| `lastModified` | `DateTime?` | Last modified timestamp when available.                                      |
-
 ## API Reference
 
 ### `DirPicker.pick`
@@ -287,6 +265,58 @@ static Future<PickedLocation?> pick({PickOptions? options})
 Returns a `PickedLocation` (either `IOPickedLocation` or `WebPickedLocation`), or `null` if the user cancelled.
 
 `options` is a `PickOptions` sealed class — pass the platform-specific subclass using its factory constructor (e.g. `PickOptions.android(...)`, `PickOptions.macos(...)`). Options for other platforms are ignored.
+
+### `DirPicker.listEntries`
+
+```dart
+static Future<List<FileSystemEntry>> listEntries(
+  PickedLocation location, {
+  bool recursive = false,
+})
+```
+
+Lists files and directories inside a previously picked location.
+
+Behavior:
+
+- Returns a flat list of descendants under the picked root.
+- Excludes the picked root itself.
+- Lists only immediate children when `recursive` is `false`.
+- Lists all nested descendants when `recursive` is `true`.
+- Does not guarantee output ordering.
+
+### `PickedLocation`
+
+Base type returned by `DirPicker.pick()`.
+
+| Type                | Platform                       | Notes                                                                 |
+|---------------------|--------------------------------|-----------------------------------------------------------------------|
+| `IOPickedLocation`  | Android, iOS, macOS, Windows, Linux | Provides a non-null `uri`.                                            |
+| `WebPickedLocation` | Web                            | Provides a `FileSystemDirectoryHandle`; `uri` is always `null`.       |
+
+### `FileSystemEntry`
+
+Model returned by `DirPicker.listEntries()`.
+
+| Field          | Type        | Description                                                    |
+|----------------|-------------|----------------------------------------------------------------|
+| `name`         | `String`    | Basename of the entry.                                         |
+| `relativePath` | `String`    | Path relative to the picked root, always using `/` separators. |
+| `isDirectory`  | `bool`      | Whether the entry is a directory.                              |
+| `uri`          | `Uri?`      | Native URI when available; always `null` on web.               |
+| `size`         | `int?`      | File size in bytes; `null` for directories or when unavailable. |
+| `lastModified` | `DateTime?` | Last modified timestamp when available.                        |
+
+### `PickOptions`
+
+Platform-specific options passed to `DirPicker.pick()`.
+
+| Factory                 | Platform | Purpose                                                        |
+|-------------------------|----------|----------------------------------------------------------------|
+| `PickOptions.android()` | Android  | Controls whether SAF URI permission should be persisted.       |
+| `PickOptions.macos()`   | macOS    | Customizes the open panel accept label and message.            |
+| `PickOptions.linux()`   | Linux    | Customizes dialog title and accept label.                      |
+| `PickOptions.windows()` | Windows  | Customizes dialog title and accept label.                      |
 
 ## Platform Support
 
