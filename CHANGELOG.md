@@ -1,3 +1,7 @@
+## 0.4.1
+
+* Update document
+
 ## 0.4.0
 
 * Add `DirPicker.listEntries()` to list files and directories from a previously picked location
