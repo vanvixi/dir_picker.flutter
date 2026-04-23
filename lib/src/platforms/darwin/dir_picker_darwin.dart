@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
 
+import '../../location/file_system_entry.dart';
 import '../../location/picked_location.dart';
 import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
@@ -49,16 +51,20 @@ class DirPickerDarwin extends DirPickerPlatform {
         case 0: // Success
           final uri = Uri.parse(message[1] as String);
           completer.complete(IOPickedLocation(uri));
+          return;
         case 1: // Cancelled
           completer.complete(null);
+          return;
         case 2: // Error
           final code = message[1] as String;
           final msg = message[2] as String;
           completer.completeError(Exception('$code: $msg'));
+          return;
         default:
           completer.completeError(
             StateError('Unknown message type: $type'),
           );
+          return;
       }
     });
 
@@ -73,6 +79,66 @@ class DirPickerDarwin extends DirPickerPlatform {
     } finally {
       calloc.free(acceptLabelPtr);
       calloc.free(messagePtr);
+    }
+
+    return completer.future;
+  }
+
+  @override
+  Future<List<FileSystemEntry>> listEntries(
+    PickedLocation location, {
+    bool recursive = false,
+  }) async {
+    final uri = location.uri;
+    if (uri == null) {
+      throw ArgumentError.value(
+        location,
+        'location',
+        'listEntries requires a native picked location with a URI.',
+      );
+    }
+
+    final completer = Completer<List<FileSystemEntry>>();
+    final port = ReceivePort();
+
+    port.listen((message) {
+      port.close();
+
+      if (message is! List || message.isEmpty) {
+        completer.completeError(StateError('Invalid message format'));
+        return;
+      }
+
+      final type = message[0] as int;
+      switch (type) {
+        case 0:
+          final decoded = jsonDecode(message[1] as String) as List<Object?>;
+          final entries = decoded
+              .map(
+                (entry) =>
+                    FileSystemEntry.fromJson(entry! as Map<Object?, Object?>),
+              )
+              .toList(growable: false);
+          completer.complete(entries);
+          return;
+        case 2:
+          final code = message[1] as String;
+          final error = message[2] as String;
+          completer.completeError(Exception('$code: $error'));
+          return;
+        default:
+          completer.completeError(
+            StateError('Unknown message type: $type'),
+          );
+          return;
+      }
+    });
+
+    final uriPtr = uri.toString().toNativeUtf8().cast<Char>();
+    try {
+      _bindings.listEntries(port.sendPort.nativePort, uriPtr, recursive);
+    } finally {
+      calloc.free(uriPtr);
     }
 
     return completer.future;

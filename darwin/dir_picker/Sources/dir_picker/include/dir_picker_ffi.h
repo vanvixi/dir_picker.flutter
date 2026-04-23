@@ -1,6 +1,7 @@
 #ifndef dir_picker_ffi_h
 #define dir_picker_ffi_h
 
+#include <stdbool.h>
 #include <stdint.h>
 
 /// Initialize Dart API for NativePort communication.
@@ -21,5 +22,16 @@ intptr_t dir_picker_init_dart_api_dl(void* data);
 /// @param accept_label  Label for the confirmation button (macOS only, nullable)
 /// @param message       Descriptive text in the panel (macOS only, nullable)
 void dir_picker_pick(int64_t native_port, const char* accept_label, const char* message);
+
+/// List directory entries and report the result via NativePort.
+///
+/// Messages sent to native_port:
+/// - Success:    [0, jsonString]
+/// - Error:      [2, errorCode, errorMessage]
+///
+/// @param native_port   Dart NativePort for result reporting
+/// @param uri           Directory URI (nullable only for invalid input handling)
+/// @param recursive     Whether to walk nested descendants
+void dir_picker_list_entries(int64_t native_port, const char* uri, bool recursive);
 
 #endif /* dir_picker_ffi_h */

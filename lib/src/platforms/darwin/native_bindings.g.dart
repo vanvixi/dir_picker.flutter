@@ -67,4 +67,32 @@ class DirPickerBindings {
               ffi.Pointer<ffi.Char>)>>('dir_picker_pick');
   late final _pick = _pickPtr.asFunction<
       void Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
+  /// List directory entries and report the result via NativePort.
+  ///
+  /// Messages sent to native_port:
+  /// - Success:    [0, jsonString]
+  /// - Error:      [2, errorCode, errorMessage]
+  ///
+  /// @param native_port   Dart NativePort for result reporting
+  /// @param uri           Directory URI (nullable only for invalid input handling)
+  /// @param recursive     Whether to walk nested descendants
+  void listEntries(
+    int native_port,
+    ffi.Pointer<ffi.Char> uri,
+    bool recursive,
+  ) {
+    return _listEntries(
+      native_port,
+      uri,
+      recursive,
+    );
+  }
+
+  late final _listEntriesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<ffi.Char>,
+              ffi.Bool)>>('dir_picker_list_entries');
+  late final _listEntries = _listEntriesPtr
+      .asFunction<void Function(int, ffi.Pointer<ffi.Char>, bool)>();
 }

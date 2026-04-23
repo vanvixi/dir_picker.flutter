@@ -39,6 +39,7 @@ void main() {
     functions: Functions(
       include: Declarations.includeSet({
         'dir_picker_init_dart_api_dl',
+        'dir_picker_list_entries',
         'dir_picker_pick',
       }),
       rename: (decl) {

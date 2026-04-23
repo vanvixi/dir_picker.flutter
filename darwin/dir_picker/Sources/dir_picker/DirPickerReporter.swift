@@ -15,9 +15,17 @@ final class DirPickerReporter {
         self.port = port
     }
 
-    func sendSuccess(uri: String) {
+    func sendUriSuccess(_ uri: String) {
+        sendStringSuccess(uri)
+    }
+
+    func sendJsonSuccess(_ json: String) {
+        sendStringSuccess(json)
+    }
+
+    private func sendStringSuccess(_ value: String) {
         guard !isClosed else { return }
-        sendArray([createInt(0), createString(uri)])
+        sendArray([createInt(0), createString(value)])
         isClosed = true
     }
 

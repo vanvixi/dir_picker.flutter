@@ -50,7 +50,7 @@ public func dirPickerPick(
             pickerLock.unlock()
 
             if let url = url {
-                reporter.sendSuccess(uri: url.absoluteString)
+                reporter.sendUriSuccess(url.absoluteString)
             } else {
                 reporter.sendCancelled()
             }
@@ -85,10 +85,106 @@ public func dirPickerPick(
 
     PanelPickerHelper.pick(acceptLabel: acceptLabel, message: message) { url in
         if let url = url {
-            reporter.sendSuccess(uri: url.absoluteString)
+            reporter.sendUriSuccess(url.absoluteString)
         } else {
             reporter.sendCancelled()
         }
     }
 }
 #endif
+
+@_cdecl("dir_picker_list_entries")
+public func dirPickerListEntries(
+    _ nativePort: Int64,
+    _ uriPtr: UnsafePointer<CChar>?,
+    _ recursive: Bool
+) {
+    let reporter = DirPickerReporter(port: nativePort)
+
+    guard let uriString = uriPtr.map({ String(cString: $0) }),
+          let rootUrl = URL(string: uriString) else {
+        reporter.sendError(code: "INVALID_URI", message: "Invalid URI")
+        return
+    }
+
+    DispatchQueue.global(qos: .userInitiated).async {
+        let isAccessing = rootUrl.startAccessingSecurityScopedResource()
+        defer {
+            if isAccessing {
+                rootUrl.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        let fileManager = FileManager.default
+        let keys: [URLResourceKey] = [
+            .nameKey,
+            .isDirectoryKey,
+            .fileSizeKey,
+            .contentModificationDateKey,
+        ]
+
+        do {
+            let urls: [URL]
+            if recursive {
+                urls = fileManager.enumerator(
+                    at: rootUrl,
+                    includingPropertiesForKeys: keys,
+                    options: [],
+                    errorHandler: nil
+                )?.compactMap { $0 as? URL } ?? []
+            } else {
+                urls = try fileManager.contentsOfDirectory(
+                    at: rootUrl,
+                    includingPropertiesForKeys: keys,
+                    options: []
+                )
+            }
+
+            let entries = try urls.map { fileUrl in
+                try makeEntryDictionary(fileUrl: fileUrl, rootUrl: rootUrl, keys: keys)
+            }
+
+            let jsonData = try JSONSerialization.data(withJSONObject: entries)
+            let jsonString = String(data: jsonData, encoding: .utf8) ?? "[]"
+            reporter.sendJsonSuccess(jsonString)
+        } catch {
+            reporter.sendError(code: "LIST_ERROR", message: error.localizedDescription)
+        }
+    }
+}
+
+private func makeEntryDictionary(
+    fileUrl: URL,
+    rootUrl: URL,
+    keys: [URLResourceKey]
+) throws -> [String: Any] {
+    let resourceValues = try fileUrl.resourceValues(forKeys: Set(keys))
+    let isDirectory = resourceValues.isDirectory ?? false
+
+    return [
+        "name": resourceValues.name ?? fileUrl.lastPathComponent,
+        "relativePath": relativePath(for: fileUrl, rootUrl: rootUrl),
+        "isDirectory": isDirectory,
+        "uri": fileUrl.absoluteString,
+        "size": isDirectory ? NSNull() : (resourceValues.fileSize as Any? ?? NSNull()),
+        "lastModified": resourceValues.contentModificationDate.map {
+            Int64($0.timeIntervalSince1970 * 1000)
+        } ?? NSNull(),
+    ]
+}
+
+private func relativePath(for fileUrl: URL, rootUrl: URL) -> String {
+    let rootPath = rootUrl.standardizedFileURL.path
+    let filePath = fileUrl.standardizedFileURL.path
+
+    if filePath == rootPath {
+        return ""
+    }
+
+    let prefix = rootPath.hasSuffix("/") ? rootPath : rootPath + "/"
+    if filePath.hasPrefix(prefix) {
+        return String(filePath.dropFirst(prefix.count))
+    }
+
+    return fileUrl.lastPathComponent
+}
