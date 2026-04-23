@@ -54,6 +54,7 @@ void main(List<String> args) async {
       ],
       classes: [
         'com.vanvixi.dir_picker.DirPicker',
+        'com.vanvixi.dir_picker.ListEntriesCallback',
         'com.vanvixi.dir_picker.PickerCallback',
       ],
     ),

@@ -44,11 +44,11 @@ class DirPickerPlugin : FlutterPlugin, ActivityAware, ActivityResultListener {
     // ─────────────────────────────────────────────────────────────────────────
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        // No method channel — JNI only
+        DirPicker.applicationContext = binding.applicationContext
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        // No-op
+        DirPicker.applicationContext = null
     }
 
     // ─────────────────────────────────────────────────────────────────────────

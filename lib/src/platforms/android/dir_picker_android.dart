@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:jni/jni.dart';
 
+import '../../location/file_system_entry.dart';
 import '../../location/picked_location.dart';
 import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
@@ -42,6 +44,55 @@ class DirPickerAndroid extends DirPickerPlatform {
 
     // Non-blocking: Kotlin launches coroutine internally
     native.DirPicker.pick(androidOptions.shouldPersist, callback);
+
+    return completer.future.whenComplete(() => callback.release());
+  }
+
+  @override
+  Future<List<FileSystemEntry>> listEntries(
+    PickedLocation location, {
+    bool recursive = false,
+  }) {
+    final uri = location.uri;
+    if (uri == null) {
+      throw ArgumentError.value(
+        location,
+        'location',
+        'listEntries requires a native picked location with a URI.',
+      );
+    }
+
+    final completer = Completer<List<FileSystemEntry>>();
+    final callback = native.ListEntriesCallback.implement(
+      native.$ListEntriesCallback(
+        onSuccess: (jJson) {
+          final json = jJson.toDartString();
+          jJson.release();
+          final decoded = jsonDecode(json) as List<Object?>;
+          final entries = decoded
+              .map(
+                (entry) =>
+                    FileSystemEntry.fromJson(entry! as Map<Object?, Object?>),
+              )
+              .toList(growable: false);
+          completer.complete(entries);
+        },
+        onError: (jCode, jMessage) {
+          final code = jCode.toDartString();
+          final message = jMessage.toDartString();
+          jCode.release();
+          jMessage.release();
+          completer.completeError(Exception('$code: $message'));
+        },
+      ),
+    );
+
+    final treeUri = uri.toString().toJString();
+    try {
+      native.DirPicker.listEntries(treeUri, recursive, callback);
+    } finally {
+      treeUri.release();
+    }
 
     return completer.future.whenComplete(() => callback.release());
   }
