@@ -1,5 +1,7 @@
 ## 0.4.0
 
+* Add `DirPicker.listEntries()` to list files and directories from a previously picked location
+* Add `FileSystemEntry` with `relativePath`, metadata, and nullable web `uri`
 * **Breaking:** `DirPicker.pick()` now takes a single `PickOptions? options` parameter instead of separate per-platform named parameters (`androidOptions`, `linuxOptions`, `macosOptions`, `windowsOptions`)
 * **Breaking:** Rename `SelectedLocation` → `PickedLocation`, `NativeLocation` → `IOPickedLocation`, `WebSelectedLocation` → `WebPickedLocation`
 * Add `PickOptions` sealed class with platform-specific factory constructors: `PickOptions.android(...)`, `PickOptions.macos(...)`, `PickOptions.linux(...)`, `PickOptions.windows(...)`
@@ -26,7 +28,7 @@ if (location is NativeLocation) { ... }
 if (location is WebSelectedLocation) { ... }
 
 // After
-if (location is NativePickedLocation) { ... }
+if (location is IOPickedLocation) { ... }
 if (location is WebPickedLocation) { ... }
 ```
 

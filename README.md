@@ -5,7 +5,7 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-A Flutter plugin for picking a directory across all platforms using native system dialogs. Returns a `PickedLocation?` — null if the user cancelled.
+A Flutter plugin for picking a directory across all platforms using native system dialogs. Returns a `PickedLocation?` — null if the user cancelled, and can list entries from a previously picked directory with `DirPicker.listEntries()`.
 
 ## Features
 
@@ -116,6 +116,18 @@ if (location == null) {
 } else {
   // Native (Android, iOS, macOS, Windows, Linux)
   print('Selected: ${location.uri}');
+}
+```
+
+### List directory entries
+
+```dart
+final location = await DirPicker.pick();
+if (location == null) return;
+
+final entries = await DirPicker.listEntries(location, recursive: true);
+for (final entry in entries) {
+  print('${entry.relativePath} (dir: ${entry.isDirectory})');
 }
 ```
 
@@ -241,6 +253,28 @@ final location = await DirPicker.pick(
   options: PickOptions.android(shouldPersist: true),
 );
 ```
+
+### `DirPicker.listEntries`
+
+```dart
+static Future<List<FileSystemEntry>> listEntries(
+  PickedLocation location, {
+  bool recursive = false,
+})
+```
+
+Returns a flat list of descendants under the picked root. The root itself is excluded from the results.
+
+`FileSystemEntry` fields:
+
+| Field          | Type        | Description                                                                  |
+|----------------|-------------|------------------------------------------------------------------------------|
+| `name`         | `String`    | Basename of the entry.                                                       |
+| `relativePath` | `String`    | Path relative to the picked root, always using `/` separators.               |
+| `isDirectory`  | `bool`      | Whether the entry is a directory.                                            |
+| `uri`          | `Uri?`      | Native URI when available; always `null` on web.                             |
+| `size`         | `int?`      | File size in bytes; `null` for directories or when unavailable.              |
+| `lastModified` | `DateTime?` | Last modified timestamp when available.                                      |
 
 ## API Reference
 
