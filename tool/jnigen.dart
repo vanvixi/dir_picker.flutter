@@ -11,13 +11,15 @@ import 'package:jnigen/jnigen.dart';
 void main(List<String> args) async {
   final packageRoot = Platform.script.resolve('../');
 
-  // Step 1 — Build example APK first
-  print('Running flutter build apk --debug in example/...');
+  // Step 1 — Compile plugin Kotlin classes first. This avoids a bootstrap
+  // issue where Flutter's Dart build may reference bindings that are about to
+  // be regenerated.
+  print('Running Gradle dir_picker:compileDebugKotlin in example/android/...');
 
   final result = await Process.run(
-    'flutter',
-    ['build', 'apk', '--debug'],
-    workingDirectory: packageRoot.resolve('example/').toFilePath(),
+    './gradlew',
+    ['dir_picker:compileDebugKotlin'],
+    workingDirectory: packageRoot.resolve('example/android/').toFilePath(),
     runInShell: true,
   );
 
@@ -25,7 +27,7 @@ void main(List<String> args) async {
   stderr.write(result.stderr);
 
   if (result.exitCode != 0) {
-    throw Exception('flutter build apk failed');
+    throw Exception('Gradle dir_picker:compileDebugKotlin failed');
   }
 
   // Step 2 — Generate JNI bindings
