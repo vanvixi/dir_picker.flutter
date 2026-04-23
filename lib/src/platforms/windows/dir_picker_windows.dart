@@ -1,9 +1,12 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:path/path.dart' as p;
 
+import '../../location/file_system_entry.dart';
 import '../../location/picked_location.dart';
 import '../../options/pick_options.dart';
 import '../../platform_interface/dir_picker_platform.dart';
@@ -291,5 +294,48 @@ class DirPickerWindows extends DirPickerPlatform {
     final release =
         _vtableEntry<_ReleaseNative>(comObj, 2).asFunction<_ReleaseDart>();
     release(comObj);
+  }
+
+  @override
+  Future<List<FileSystemEntry>> listEntries(
+    PickedLocation location, {
+    bool recursive = false,
+  }) async {
+    final uri = location.uri;
+    if (uri == null) {
+      throw ArgumentError.value(
+        location,
+        'location',
+        'listEntries requires a native picked location with a URI.',
+      );
+    }
+
+    final directory = Directory.fromUri(uri);
+    final entries = <FileSystemEntry>[];
+
+    await for (final entity in directory.list(
+      recursive: recursive,
+      followLinks: false,
+    )) {
+      final stat = await entity.stat();
+      final relativePath = p.posix.normalize(
+        p.windows.relative(entity.path, from: directory.path).replaceAll(
+              r'\',
+              '/',
+            ),
+      );
+      entries.add(
+        FileSystemEntry(
+          name: p.posix.basename(relativePath),
+          relativePath: relativePath,
+          isDirectory: stat.type == FileSystemEntityType.directory,
+          uri: entity.uri,
+          size: stat.type == FileSystemEntityType.file ? stat.size : null,
+          lastModified: stat.modified,
+        ),
+      );
+    }
+
+    return entries;
   }
 }
